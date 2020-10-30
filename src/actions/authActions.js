@@ -27,3 +27,10 @@ export function errorAction(payload) {
     }
 }
 
+export function loadingAction(payload) {
+    return {
+        type: authTypes.LOADING,
+        payload
+    };
+};
+

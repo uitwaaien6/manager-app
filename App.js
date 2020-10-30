@@ -11,7 +11,7 @@ import EmployeesScreen from './src/screens/EmployeesScreen';
 
 import { setNavigator } from './src/navigation/navigationRef';
 
-import initializeStore from './src/store';
+import initializeStore from './src/stores/store';
 
 const navigator = createSwitchNavigator({
   AuthFlow: createStackNavigator({ Signup: SignupScreen, Signin: SigninScreen }),

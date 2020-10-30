@@ -4,8 +4,10 @@ import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 class AuthForm extends React.Component {
 
     state = {
+        userName: '',
         email: '',
-        password: ''
+        password: '',
+        passwordConfirm: '',
     };
 
     componentDidMount() {
@@ -16,6 +18,14 @@ class AuthForm extends React.Component {
         return (
             <View>
                 <Text>{this.props.title}</Text>
+
+                <TextInput
+                    placeholder="User Name"
+                    value={this.state.userName}
+                    onChangeText={(newText) => {
+                        this.setState({ UserName: newText });
+                    }}
+                />
 
                 <TextInput
                     placeholder="Email"
@@ -33,11 +43,19 @@ class AuthForm extends React.Component {
                     }}
                 />
 
+                <TextInput
+                    placeholder="Confirm Password..."
+                    value={this.state.passwordConfirm}
+                    onChangeText={(newText) => {
+                        this.setState({ passwordConfirm: newText });
+                    }}
+                />
+
                 <Button
                     title={this.props.title}
                     onPress={() => {
-                        const { email, password } = this.state;
-                        this.props.onSubmit({ email, password });
+                        const { userName, email, password, passwordConfirm } = this.state;
+                        this.props.onSubmit({ userName, email, password, passwordConfirm });
                     }}
                 />
             </View>

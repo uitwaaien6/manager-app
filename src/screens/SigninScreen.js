@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 'react-native';
 import AuthForm from '../components/AuthForm';
-import { signinAction, errorAction } from '../actions/authActions';
+import { signinAction, errorAction, loadingAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
@@ -36,14 +36,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        signin: async ({ email, password }) => {
+        signin: async ({ userName, email, password, passwordConfirm }) => {
             try {
-                dispatch({ type: 'LOADING', payload: true });
-                const encryptenData = encryptPassword(password);
-                const response = await managerApi.post('/signin', { email, ...encryptenData });
-                const { token } = response.data;
+                dispatch(loadingAction(true));
+                const passwordEncryption = encryptPassword(password);
+                const passwordConfirmEncryption = encryptPassword(passwordConfirm);
+                const response = await managerApi.post('/signin', { userName, email, passwordEncryption, passwordConfirmEncryption });
+                const { token, expiration } = response.data;
                 await AsyncStorage.setItem('token', token);
-                dispatch(signinAction(token));
+                dispatch(signinAction({ token, expiration }));
                 navigate('MainFlow');
             } catch (error) {
                 const message = 'Something went wrong while signing in';

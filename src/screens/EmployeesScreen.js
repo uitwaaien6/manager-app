@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, FlatList } from 'react-native';
 import AuthForm from '../components/AuthForm';
-import { signinAction, errorAction } from '../actions/authActions';
+import { loadingAction, signoutAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
@@ -9,8 +9,8 @@ import { navigate } from '../navigation/navigationRef';
 
 class EmployeesScreen extends React.Component {
 
-    componentDidMount() {
 
+    componentDidMount() {
 
     }
 
@@ -20,8 +20,7 @@ class EmployeesScreen extends React.Component {
                 <Text> Employees Screen</Text>
                 <Button
                     title="Sign out"
-                    onPress={async () => {
-                        await AsyncStorage.removeItem('token');
+                    onPress={() => {
                         this.props.signout();
                     }}
                 />
@@ -38,8 +37,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        signout: () => {
-            dispatch({ type: 'SIGNOUT' });
+        signout: async () => {
+            await AsyncStorage.removeItem('token');
+            dispatch(signoutAction());
             navigate('AuthFlow');
         }
     }
