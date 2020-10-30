@@ -5,6 +5,7 @@ import { signinAction, errorAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
+import { navigate } from '../navigation/navigationRef';
 
 class SigninScreen extends React.Component {
 
@@ -43,6 +44,7 @@ function mapDispatchToProps(dispatch) {
                 const { token } = response.data;
                 await AsyncStorage.setItem('token', token);
                 dispatch(signinAction(token));
+                navigate('MainFlow');
             } catch (error) {
                 const message = 'Something went wrong while signing in';
                 dispatch(errorAction(message));

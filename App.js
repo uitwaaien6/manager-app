@@ -9,6 +9,8 @@ import SigninScreen from './src/screens/SigninScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import EmployeesScreen from './src/screens/EmployeesScreen';
 
+import { setNavigator } from './src/navigation/navigationRef';
+
 import initializeStore from './src/store';
 
 const navigator = createSwitchNavigator({
@@ -22,7 +24,9 @@ const store = initializeStore();
 export default () => {
   return (
     <Provider store={store}>
-      <App />
+      <App ref={(navigator) => {
+        setNavigator(navigator);
+      }}/>
     </Provider>
   );
 };

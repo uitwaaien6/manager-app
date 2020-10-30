@@ -5,11 +5,24 @@ import { signupAction, errorAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
+import { navigate } from '../navigation/navigationRef';
+import jwt_decode from "jwt-decode";
+
+async function tryLocalSignin() {
+    try {
+        const token = await AsyncStorage.getItem('token');
+        if (token) {
+            console.log(jwt_decode(token));
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 class SignupScreen extends React.Component {
 
     componentDidMount() {
-
+        tryLocalSignin();
     }
 
     render() {
@@ -25,6 +38,7 @@ class SignupScreen extends React.Component {
                     title="Go to Sign in"
                     onPress={() => {
                         this.props.navigation.navigate('Signin');
+                        //testJWT();
                     }}
                 />
                 {this.props.loading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
@@ -53,7 +67,7 @@ function mapDispatchToProps(dispatch) {
                 const response = await managerApi.post('/signup', { email, ...encryptenData });
                 const { token } = response.data;
                 await AsyncStorage.setItem('token', token);
-                console.log({ token: token });
+                console.log({ token });
                 dispatch(signupAction(token));
             } catch (error) {
                 dispatch(errorAction('Invalid email address !'));

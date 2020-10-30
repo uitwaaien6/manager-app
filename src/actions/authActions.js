@@ -14,9 +14,16 @@ export function signupAction(payload) {
     };
 };
 
+export function signoutAction() {
+    return {
+        type: authTypes.SIGNOUT
+    }
+}
+
 export function errorAction(payload) {
     return {
         type: authTypes.AUTH_ERROR,
         payload
     }
 }
+
