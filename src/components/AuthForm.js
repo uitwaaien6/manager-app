@@ -10,6 +10,25 @@ class AuthForm extends React.Component {
         passwordConfirm: '',
     };
 
+    initializeForm() {
+        switch (this.props.title) {
+            case "Signup":
+                return (
+                    <TextInput
+                        placeholder="Confirm Password..."
+                        value={this.state.passwordConfirm}
+                        onChangeText={(newText) => {
+                            this.setState({ passwordConfirm: newText });
+                        }}
+                    />
+                );
+            case 'Signin':
+                return null;
+            default:
+                return null;
+        };
+    };
+
     componentDidMount() {
 
     }
@@ -43,13 +62,7 @@ class AuthForm extends React.Component {
                     }}
                 />
 
-                <TextInput
-                    placeholder="Confirm Password..."
-                    value={this.state.passwordConfirm}
-                    onChangeText={(newText) => {
-                        this.setState({ passwordConfirm: newText });
-                    }}
-                />
+                {this.initializeForm()}
 
                 <Button
                     title={this.props.title}
