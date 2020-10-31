@@ -14,16 +14,78 @@ class AuthForm extends React.Component {
         switch (this.props.title) {
             case "Signup":
                 return (
-                    <TextInput
-                        placeholder="Confirm Password..."
-                        value={this.state.passwordConfirm}
-                        onChangeText={(newText) => {
-                            this.setState({ passwordConfirm: newText });
-                        }}
-                    />
+                    <View>
+                        <TextInput
+                            placeholder="User Name"
+                            value={this.state.userName}
+                            
+                            onChangeText={(newText) => {
+                                this.setState({ userName: newText });
+                            }}
+                        />
+
+                        <TextInput
+                            placeholder="Email"
+                            value={this.state.email}
+                            onChangeText={(newText) => {
+                                this.setState({ email: newText });
+                            }}
+                        />
+
+                        <TextInput
+                            placeholder="Password..."
+                            value={this.state.password}
+                            onChangeText={(newText) => {
+                                this.setState({ password: newText });
+                            }}
+                        />
+
+                        <TextInput
+                            placeholder="Confirm Password..."
+                            value={this.state.passwordConfirm}
+                            onChangeText={(newText) => {
+                                this.setState({ passwordConfirm: newText });
+                            }}
+                        />
+
+                        <Button
+                            title={this.props.title}
+                            onPress={() => {
+                                const { userName, email, password, passwordConfirm } = this.state;
+                                this.props.onSubmit({ userName, email, password, passwordConfirm });
+                            }}
+                        />
+                    </View>
                 );
             case 'Signin':
-                return null;
+                return (
+                    <View>
+
+                        <TextInput
+                            placeholder="Email"
+                            value={this.state.email}
+                            onChangeText={(newText) => {
+                                this.setState({ email: newText });
+                            }}
+                        />
+
+                        <TextInput
+                            placeholder="Password..."
+                            value={this.state.password}
+                            onChangeText={(newText) => {
+                                this.setState({ password: newText });
+                            }}
+                        />
+
+                        <Button
+                            title={this.props.title}
+                            onPress={() => {
+                                const { email, password } = this.state;
+                                this.props.onSubmit({ email, password });
+                            }}
+                        />
+                    </View>
+                );
             default:
                 return null;
         };
@@ -36,41 +98,7 @@ class AuthForm extends React.Component {
     render() {
         return (
             <View>
-                <Text>{this.props.title}</Text>
-
-                <TextInput
-                    placeholder="User Name"
-                    value={this.state.userName}
-                    onChangeText={(newText) => {
-                        this.setState({ UserName: newText });
-                    }}
-                />
-
-                <TextInput
-                    placeholder="Email"
-                    value={this.state.email}
-                    onChangeText={(newText) => {
-                        this.setState({ email: newText });
-                    }}
-                />
-
-                <TextInput
-                    placeholder="Password..."
-                    value={this.state.password}
-                    onChangeText={(newText) => {
-                        this.setState({ password: newText });
-                    }}
-                />
-
                 {this.initializeForm()}
-
-                <Button
-                    title={this.props.title}
-                    onPress={() => {
-                        const { userName, email, password, passwordConfirm } = this.state;
-                        this.props.onSubmit({ userName, email, password, passwordConfirm });
-                    }}
-                />
             </View>
         );
     };

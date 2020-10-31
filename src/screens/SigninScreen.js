@@ -21,6 +21,7 @@ class SigninScreen extends React.Component {
                     onSubmit={this.props.signin}
                 />
                 {this.props.loading ? <ActivityIndicator size="small" color="#0000ff" /> : null}
+                {this.props.error ? <Text>{this.props.error}</Text> : null}
             </View>
         );
     };
@@ -28,7 +29,7 @@ class SigninScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        token: state.auth.token,
+        currentUser: state.currentUser,
         error: state.auth.error,
         loading: state.auth.loading
     };
@@ -36,14 +37,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        signin: async ({ userName, email, password, passwordConfirm }) => {
+        signin: async ({ email, password }) => {
             try {
                 dispatch(loadingAction(true));
                 const passwordEncryption = encryptPassword(password);
-                const passwordConfirmEncryption = encryptPassword(passwordConfirm);
-                const response = await managerApi.post('/signin', { userName, email, passwordEncryption, passwordConfirmEncryption });
+                const response = await managerApi.post('/signin', { email, passwordEncryption });
                 const { token, expiration } = response.data;
                 await AsyncStorage.setItem('token', token);
+                await AsyncStorage.setItem('expiration', expiration.toString());
                 dispatch(signinAction({ token, expiration }));
                 navigate('MainFlow');
             } catch (error) {

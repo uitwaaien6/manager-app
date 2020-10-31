@@ -18,7 +18,7 @@ function authReducer(state = initialState, action) {
             return { ...state, currentUser: { token: action.payload.token, exp: action.payload.expiration }, msg: 'Succesfully signed up', error: null, loading: false };
         case authTypes.AUTH_ERROR:
             return { ...state, error: action.payload, msg: null, loading: null };
-        case authTypes.SIGN_OUT:
+        case authTypes.SIGNOUT:
             return { ...state, currentUser: { token: null, exp: null }, msg: 'Succesfully logged out' }; 
         case authTypes.LOADING:
             return { ...state, loading: action.payload };

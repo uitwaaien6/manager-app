@@ -10,7 +10,7 @@ import { navigate } from '../navigation/navigationRef';
 class SignupScreen extends React.Component {
 
     componentDidMount() {
-
+        
     }
 
     render() {
@@ -26,7 +26,6 @@ class SignupScreen extends React.Component {
                     title="Go to Sign in"
                     onPress={() => {
                         this.props.navigation.navigate('Signin');
-                        console.log(this.props.currentUser);
                     }}
                 />
                 {this.props.loading ? <ActivityIndicator size="large" color="#0000ff" /> : null}

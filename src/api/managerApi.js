@@ -3,26 +3,32 @@ import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 
 import { navigate } from '../navigation/navigationRef';
 
 const instance = axios.create({
-    baseURL: 'https://14fc72ddaaba.ngrok.io'
+    baseURL: 'https://cfab0d07dc73.ngrok.io'
 });
 
 instance.interceptors.request.use(
     async (config) => {
-        const token = await AsyncStorage.getItem('token');
-        const expiration = await AsyncStorage.getItem('expiration');
-        if (token && expiration) {
-            if (Date.now() > parseFloat(expiration)) {
-                console.log('JWT has expired');
-                await AsyncStorage.removeItem('token');
-                await AsyncStorage.removeItem('token');
-                navigate('AuthFlow');
-                return config;
-            } else {
-                console.log('jwt is still valid');
-                config.headers.Authorization = `Bearer ${token}`;
+
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const expiration = await AsyncStorage.getItem('expiration');
+
+            if (token) {
+                if (Date.now() > parseFloat(expiration)) {
+                    console.log('JWT has expired');
+                    await AsyncStorage.removeItem('token');
+                    await AsyncStorage.removeItem('expiration');
+                    navigate('AuthFlow');
+                    return config;
+                } else {
+                    console.log('jwt is still valid');
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
             }
+            return config;
+        } catch (error) {
+            console.log(error.message);
         }
-        return config;
     },
     async (err) => {
         return Promise.reject(err);

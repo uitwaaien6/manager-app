@@ -25,7 +25,7 @@ export default () => {
   return (
     <Provider store={store}>
       <App ref={(navigator) => {
-        setNavigator(navigator);
+        return setNavigator(navigator);
       }}/>
     </Provider>
   );

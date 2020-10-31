@@ -1,6 +1,7 @@
 import * as authTypes from './authTypes';
 
 export function signinAction(payload) {
+    console.log(payload);
     return {
         type: authTypes.SIGNIN,
         payload
