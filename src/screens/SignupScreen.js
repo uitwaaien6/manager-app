@@ -9,9 +9,27 @@ import { navigate } from '../navigation/navigationRef';
 
 class SignupScreen extends React.Component {
 
-    componentDidMount() {
-        
+    async checkIfUserAuthenticated() {
+        const token = await AsyncStorage.getItem('token');
+        const exp = await AsyncStorage.getItem('expiration');
+        console.log(token, exp);
+        if (token) {
+            if (Date.now() > exp) {
+                console.log('This users token has expired go fuck yourself');
+                navigate('AuthFlow');
+            } else {
+                console.log('Current user has the token its okay');
+                navigate('MainFlow');
+            }
+        } else {
+            console.log('This users token is not event exist how did you even get here');
+            navigate('AuthFlow');
+        }
     }
+
+    componentDidMount() {
+        this.checkIfUserAuthenticated();
+    }   
 
     render() {
         return (
@@ -56,7 +74,6 @@ function mapDispatchToProps(dispatch) {
                 const { token, expiration } = response.data;
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('expiration', expiration.toString());
-                console.log(token, expiration);
                 dispatch(signupAction({ token, expiration }));
             } catch (error) {
                 console.log(error);

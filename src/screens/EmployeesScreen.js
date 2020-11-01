@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
 import AuthForm from '../components/AuthForm';
 import { loadingAction, signoutAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
@@ -9,8 +9,9 @@ import { navigate } from '../navigation/navigationRef';
 
 class EmployeesScreen extends React.Component {
 
-    checkIfUserAuthenticated() {
-        const { token, exp } = this.props.currentUser;
+    async checkIfUserAuthenticated() {
+        const token = await AsyncStorage.getItem('token');
+        const exp = await AsyncStorage.getItem('token');
         if (token) {
             if (Date.now() > exp) {
                 console.log('This users token has expired go fuck yourself');
@@ -33,20 +34,20 @@ class EmployeesScreen extends React.Component {
             <View>
                 <Text> Employees Screen</Text>
 
-                <Button
-                    title="Add Employee"
-                    onPress={() => {
-                        console.log('Hello');
-                    }}
-                />
-
                 <FlatList
-                    datat={[]}
-                    keyExtractor={item => item.id}
+                    data={this.props.employees}
+                    keyExtractor={item => item.phone}
                     renderItem={({ item, index }) => {
                         return (
                             <View>
-                                <Text>{item}</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        const employee = item;
+                                        navigate('EmployeesDetail', { employee });
+                                    }}
+                                >
+                                    <Text>{item.name}</Text>
+                                </TouchableOpacity>
                             </View>
                         );
                     }}
@@ -65,7 +66,8 @@ class EmployeesScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        currentUser: state.auth.currentUser
+        currentUser: state.auth.currentUser,
+        employees: state.employees.employees
     };
 }
 
