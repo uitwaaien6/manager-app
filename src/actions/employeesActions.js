@@ -1,8 +1,8 @@
 import * as employeesTypes from '../actions/employeesTypes';
 
-export function addEmployeeAction(payload) {
+export function getEmployeesAction(payload) {
     return {
-        type: employeesTypes.ADD_EMPLOYEE,
+        type: employeesTypes.GET_EMPLOYEES,
         payload
     };
 }

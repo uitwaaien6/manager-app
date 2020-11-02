@@ -31,7 +31,7 @@ class CreateEmployeeScreen extends React.Component {
     }
 
     componentDidMount() {
-        
+
     }
 
     render() {
@@ -66,7 +66,6 @@ class CreateEmployeeScreen extends React.Component {
                     onPress={() => {
                         const { name, phone, shift } = this.state;
                         this.props.addEmployee({ name, phone, shift });
-                        console.log(this.props.employees);
                     }}
                 />
             </View>
@@ -83,8 +82,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        addEmployee: ({ name, phone, shift }) => {
-            dispatch({ type: 'ADD_EMPLOYEE', payload: { name, phone, shift } });
+        addEmployee: async ({ name, phone, shift }) => {
+            try {
+                await managerApi.post('/employees', { name, phone, shift });
+            } catch (error) {
+                console.log(error.message);
+            }
         }
     }
 }

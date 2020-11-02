@@ -6,9 +6,8 @@ const initialState = {
 
 function employeesReducer(state = initialState, action) {
     switch (action.type) {
-        case employeesTypes.ADD_EMPLOYEE:
-            console.log(action.payload);
-            return { ...state, employees: [...state.employees, action.payload] };
+        case employeesTypes.GET_EMPLOYEES:
+            return { ...state, employees: action.payload };
         default:
             return state;
     };

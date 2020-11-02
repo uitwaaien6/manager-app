@@ -74,7 +74,7 @@ function mapDispatchToProps(dispatch) {
                 const { token, expiration } = response.data;
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('expiration', expiration.toString());
-                dispatch(signupAction({ token, expiration }));
+                dispatch(signupAction({ token, expiration: expiration.toString() }));
             } catch (error) {
                 console.log(error);
                 dispatch(errorAction('Invalid email address !'));

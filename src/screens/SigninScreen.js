@@ -45,7 +45,7 @@ function mapDispatchToProps(dispatch) {
                 const { token, expiration } = response.data;
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('expiration', expiration.toString());
-                dispatch(signinAction({ token, expiration }));
+                dispatch(signinAction({ token, expiration: expiration.toString() }));
                 navigate('MainFlow');
             } catch (error) {
                 const message = 'Something went wrong while signing in';

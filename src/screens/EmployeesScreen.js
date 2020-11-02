@@ -6,6 +6,7 @@ import { encryptPassword, decryptPassword } from '../encryption/coefficientFairE
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
+import { getEmployeesAction } from '../actions/employeesActions';
 
 class EmployeesScreen extends React.Component {
 
@@ -27,6 +28,7 @@ class EmployeesScreen extends React.Component {
 
     componentDidMount() {
         this.checkIfUserAuthenticated();
+        this.props.getEmployees();
     }
 
     render() {
@@ -73,6 +75,11 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
+        getEmployees: async () => {
+            const response = await managerApi.get('/employees');
+            const employees = response.data;
+            dispatch(getEmployeesAction(employees));
+        },
         signout: async () => {
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('expiration');
