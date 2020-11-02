@@ -13,7 +13,8 @@ instance.interceptors.request.use(
             const token = await AsyncStorage.getItem('token');
             const expiration = await AsyncStorage.getItem('expiration');
 
-            if (token) {
+            if (token && expiration) {
+                console.log(' ~ SUCCESS, token and expiration is not null in AsyncStorage');
                 if (Date.now() > parseFloat(expiration)) {
                     console.log('JWT has expired');
                     await AsyncStorage.removeItem('token');
