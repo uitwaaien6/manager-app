@@ -60,7 +60,6 @@ class AuthForm extends React.Component {
             case 'Signin':
                 return (
                     <View>
-
                         <TextInput
                             placeholder="Email"
                             value={this.state.email}
@@ -97,9 +96,7 @@ class AuthForm extends React.Component {
 
     render() {
         return (
-            <View>
-                {this.initializeForm()}
-            </View>
+            this.initializeForm()
         );
     };
 };

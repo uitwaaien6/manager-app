@@ -36,6 +36,27 @@ class EmployeesDetailScreen extends React.Component {
                     <Text>{this.state.employee.name}</Text>
                     <Text>{this.state.employee.phone}</Text>
                     <Text>{this.state.employee.shift}</Text>
+
+                    <Button
+                        title="Save"
+                        onPress={() => {
+                            
+                        }}
+                    />
+
+                    <Button
+                        title="Text Schedule"
+                        onPress={() => {
+
+                        }}
+                    />
+
+                    <Button
+                        title="Fire"
+                        onPress={() => {
+
+                        }}
+                    />
                 </View>
             );
         }
@@ -63,8 +84,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        addEmployee: ({ name, phone, shift }) => {
-            dispatch({ type: 'ADD_EMPLOYEE', payload: { name, phone, shift } });
+        fireEmployee: ({ _id }) => {
+            console.log(_id);
         }
     }
 }
