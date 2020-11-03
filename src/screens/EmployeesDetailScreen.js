@@ -87,7 +87,7 @@ function mapDispatchToProps(dispatch) {
         fireEmployee: ({ _id }) => {
             console.log(_id);
         }
-    }
+    };
 }
 
 
