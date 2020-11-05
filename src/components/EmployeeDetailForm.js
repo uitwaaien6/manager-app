@@ -9,9 +9,20 @@ class EmployeeDetailForm extends React.Component {
         shift: this.props.employee.shift
     }
 
+    componentDidMount() {
+        const { name, phone, shift } = this.props.employee;
+        this.setState({ name, phone, shift });
+    }
+
     render() {
         return (
             <View>
+                <NavigationEvents 
+                    onDidFocus={() => {
+                        const { name, phone, shift } = this.props.employee;
+                        this.setState({ name, phone, shift });
+                    }} 
+                />
 
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Name: </Text>

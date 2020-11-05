@@ -10,10 +10,7 @@ import EmployeeDetailForm from '../components/EmployeeDetailForm';
 class EmployeeDetailScreen extends React.Component {
 
     state = {
-        employee: this.props.navigation.getParam('employee'),
-        name: '',
-        phone: '',
-        shift: ''
+        employee: this.props.navigation.getParam('employee')
     }
 
     async checkIfUserAuthenticated() {
@@ -48,13 +45,6 @@ class EmployeeDetailScreen extends React.Component {
     render() {
         return (
             <View>
-                <NavigationEvents 
-                    onDidFocus={() => {
-                        const { name, phone, shift } = this.state.employee;
-                        this.setState({ name, phone, shift });
-                    }} 
-                />
-
                 <EmployeeDetailForm
                     employee={this.state.employee}
                     onSave={this.props.editEmployee}
