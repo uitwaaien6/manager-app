@@ -1,11 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, FlatList, TextInput } from 'react-native';
-import AuthForm from '../components/AuthForm';
-import { loadingAction, signoutAction } from '../actions/authActions';
-import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
+import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, TextInput } from 'react-native';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
+import { employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
 
 class CreateEmployeeScreen extends React.Component {
 
@@ -15,23 +13,31 @@ class CreateEmployeeScreen extends React.Component {
         shift: null
     }
 
-    checkIfUserAuthenticated() {
-        const { token, exp } = this.props.currentUser;
-        if (token) {
-            if (Date.now() > exp) {
-                console.log('This users token has expired go fuck yourself');
-                navigate('AuthFlow');
-            } else {
-                console.log('Current user has the token its okay');
-            }
+    async checkIfUserAuthenticated() {
+        const token = await AsyncStorage.getItem('token');
+        const exp = await AsyncStorage.getItem('token');
+        if (token && exp) {
+            if (Date.now() > exp) { navigate('AuthFlow'); }
         } else {
-            console.log('This users token is not event exist how did you even get here');
             navigate('AuthFlow');
         }
     }
 
-    componentDidMount() {
+    displayInfo() {
+        if (this.props.loading) {
+            return <ActivityIndicator size="large" color="#0000ff" />;
+        }
+        if (this.props.msg) {
+            return <Text>{this.props.msg}</Text>;
+        }
+        if (this.error) {
+            return <Text>{this.props.error}</Text>;
+        }
+        return null;
+    }
 
+    componentDidMount() {
+        this.checkIfUserAuthenticated();
     }
 
     render() {
@@ -66,8 +72,11 @@ class CreateEmployeeScreen extends React.Component {
                     onPress={() => {
                         const { name, phone, shift } = this.state;
                         this.props.addEmployee({ name, phone, shift });
+                        this.setState({ name: null, phone: null, shift: null });
                     }}
                 />
+
+                {this.displayInfo()}
             </View>
         );
     };
@@ -75,8 +84,11 @@ class CreateEmployeeScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        currentUser: state.auth.currentUser,
-        employees: state.employees.employees
+        currentUser: state.authReducer.currentUser,
+        error: state.employeesReducer.error,
+        loading: state.employeesReducer.loading,
+        msg: state.employeesReducer.msg,
+        employees: state.employeesReducer.employees
     };
 }
 
@@ -84,8 +96,11 @@ function mapDispatchToProps(dispatch) {
     return {
         addEmployee: async ({ name, phone, shift }) => {
             try {
+                dispatch(employeesLoadingAction(true));
                 await managerApi.post('/employees', { name, phone, shift });
+                dispatch(employeesLoadingAction(false));
             } catch (error) {
+                dispatch(employeesErrorAction(error.message));
                 console.log(error.message);
             }
         }

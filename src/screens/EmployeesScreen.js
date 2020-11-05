@@ -1,12 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, FlatList, TouchableOpacity } from 'react-native';
-import AuthForm from '../components/AuthForm';
-import { loadingAction, signoutAction } from '../actions/authActions';
-import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
+import { authSignoutAction } from '../actions/authActions';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
-import { getEmployeesAction } from '../actions/employeesActions';
+import { employeesGetAction } from '../actions/employeesActions';
 import { NavigationEvents } from 'react-navigation';
 
 class EmployeesScreen extends React.Component {
@@ -14,22 +12,15 @@ class EmployeesScreen extends React.Component {
     async checkIfUserAuthenticated() {
         const token = await AsyncStorage.getItem('token');
         const exp = await AsyncStorage.getItem('token');
-        if (token) {
-            if (Date.now() > exp) {
-                console.log('This users token has expired go fuck yourself');
-                navigate('AuthFlow');
-            } else {
-                console.log('Current user has the token its okay');
-            }
+        if (token && exp) {
+            if (Date.now() > exp) { navigate('AuthFlow'); }
         } else {
-            console.log('This users token is not event exist how did you even get here');
             navigate('AuthFlow');
         }
     }
 
     componentDidMount() {
         this.checkIfUserAuthenticated();
-        this.props.getEmployees();
     }
 
     render() {
@@ -63,6 +54,13 @@ class EmployeesScreen extends React.Component {
                 />
 
                 <Button
+                    title="Create Employee"
+                    onPress={() => {
+                        navigate('CreateEmployee');
+                    }}
+                />
+
+                <Button
                     title="Sign out"
                     onPress={() => {
                         this.props.signout();
@@ -75,8 +73,11 @@ class EmployeesScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        currentUser: state.auth.currentUser,
-        employees: state.employees.employees
+        currentUser: state.authReducer.currentUser,
+        employees: state.employeesReducer.employees,
+        error: state.employeesReducer.error,
+        loading: state.employeesReducer.loading,
+        msg: state.employeesReducer.msg
     };
 }
 
@@ -85,13 +86,12 @@ function mapDispatchToProps(dispatch) {
         getEmployees: async () => {
             const response = await managerApi.get('/employees');
             const employees = response.data;
-            dispatch(getEmployeesAction(employees));
-            console.log(employees);
+            dispatch(employeesGetAction(employees));
         },
         signout: async () => {
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('expiration');
-            dispatch(signoutAction());
+            dispatch(authSignoutAction());
             navigate('AuthFlow');
         }
     }

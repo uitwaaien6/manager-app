@@ -1,13 +1,20 @@
 import * as employeesTypes from '../actions/employeesTypes';
 
 const initialState = {
-    employees: []
+    employees: [],
+    loading: false,
+    error: null,
+    msg: null
 };
 
 function employeesReducer(state = initialState, action) {
     switch (action.type) {
-        case employeesTypes.GET_EMPLOYEES:
-            return { ...state, employees: action.payload };
+        case employeesTypes.EMPLOYEES_GET:
+            return { ...state, employees: action.payload, loading: false };
+        case employeesTypes.EMPLOYEES_LOADING:
+            return { ...state, loading: action.payload };
+        case employeesTypes.EMPLOYEES_ERROR:
+            return { ...state, error: action.payload, loading: false };
         default:
             return state;
     };

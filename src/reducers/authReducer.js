@@ -12,15 +12,15 @@ const initialState = {
 
 function authReducer(state = initialState, action) {
     switch (action.type) {
-        case authTypes.SIGNIN:
-            return { ...state, currentUser: { token: action.payload.token, exp: action.payload.expiration }, error: null, loading: false };
-        case authTypes.SIGNUP:
+        case authTypes.AUTH_SIGNUP:
             return { ...state, currentUser: { token: action.payload.token, exp: action.payload.expiration }, msg: 'Succesfully signed up', error: null, loading: false };
+        case authTypes.AUTH_SIGNIN:
+            return { ...state, currentUser: { token: action.payload.token, exp: action.payload.expiration }, error: null, loading: false };
+        case authTypes.AUTH_SIGNOUT:
+            return { ...state, currentUser: { token: null, exp: null }, msg: 'Succesfully logged out' }; 
         case authTypes.AUTH_ERROR:
             return { ...state, error: action.payload, msg: null, loading: null };
-        case authTypes.SIGNOUT:
-            return { ...state, currentUser: { token: null, exp: null }, msg: 'Succesfully logged out' }; 
-        case authTypes.LOADING:
+        case authTypes.AUTH_LOADING:
             return { ...state, loading: action.payload };
         default:
             return state;

@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 
 import { navigate } from '../navigation/navigationRef';
 
 const instance = axios.create({
-    baseURL: 'https://ccef1c388bb3.ngrok.io'
+    baseURL: 'https://f53be586d3d4.ngrok.io'
 });
 
 instance.interceptors.request.use(
@@ -14,15 +14,12 @@ instance.interceptors.request.use(
             const expiration = await AsyncStorage.getItem('expiration');
 
             if (token && expiration) {
-                console.log(' ~ SUCCESS, token and expiration is not null in AsyncStorage');
                 if (Date.now() > parseFloat(expiration)) {
-                    console.log('JWT has expired');
                     await AsyncStorage.removeItem('token');
                     await AsyncStorage.removeItem('expiration');
                     navigate('AuthFlow');
                     return config;
                 } else {
-                    console.log('jwt is still valid');
                     config.headers.Authorization = `Bearer ${token}`;
                 }
             }

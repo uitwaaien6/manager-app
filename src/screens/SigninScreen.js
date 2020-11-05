@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 'react-native';
 import AuthForm from '../components/AuthForm';
-import { signinAction, errorAction, loadingAction } from '../actions/authActions';
+import { authSigninAction, authErrorAction, authLoadingAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
@@ -29,9 +29,10 @@ class SigninScreen extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        currentUser: state.currentUser,
-        error: state.auth.error,
-        loading: state.auth.loading
+        currentUser: state.authReducer.currentUser,
+        error: state.authReducer.error,
+        loading: state.authReducer.loading,
+        msg: state.authReducer.msg
     };
 }
 
@@ -39,17 +40,17 @@ function mapDispatchToProps(dispatch) {
     return {
         signin: async ({ email, password }) => {
             try {
-                dispatch(loadingAction(true));
+                dispatch(authLoadingAction(true));
                 const passwordEncryption = encryptPassword(password);
                 const response = await managerApi.post('/signin', { email, passwordEncryption });
                 const { token, expiration } = response.data;
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('expiration', expiration.toString());
-                dispatch(signinAction({ token, expiration: expiration.toString() }));
+                dispatch(authSigninAction({ token, expiration: expiration.toString() }));
                 navigate('MainFlow');
             } catch (error) {
                 const message = 'Something went wrong while signing in';
-                dispatch(errorAction(message));
+                dispatch(authErrorAction(message));
             }
         }
     }

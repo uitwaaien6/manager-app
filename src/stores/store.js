@@ -3,8 +3,8 @@ import authReducer from '../reducers/authReducer';
 import employeesReducer from '../reducers/employeesReducer';
 
 const rootReducer = combineReducers({
-    auth: authReducer,
-    employees: employeesReducer
+    authReducer,
+    employeesReducer
 });
 
 export default () => {

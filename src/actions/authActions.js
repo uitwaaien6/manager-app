@@ -1,36 +1,35 @@
 import * as authTypes from './authTypes';
 
-export function signinAction(payload) {
-    console.log(payload);
+export function authSigninAction(payload) {
     return {
-        type: authTypes.SIGNIN,
+        type: authTypes.AUTH_SIGNIN,
         payload
     };
 };
 
-export function signupAction(payload) {
+export function authSignupAction(payload) {
     return {
-        type: authTypes.SIGNUP,
+        type: authTypes.AUTH_SIGNUP,
         payload
     };
 };
 
-export function signoutAction() {
+export function authSignoutAction() {
     return {
-        type: authTypes.SIGNOUT
+        type: authTypes.AUTH_SIGNOUT
     }
 }
 
-export function errorAction(payload) {
+export function authErrorAction(payload) {
     return {
         type: authTypes.AUTH_ERROR,
         payload
     }
 }
 
-export function loadingAction(payload) {
+export function authLoadingAction(payload) {
     return {
-        type: authTypes.LOADING,
+        type: authTypes.AUTH_LOADING,
         payload
     };
 };

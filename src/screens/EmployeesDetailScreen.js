@@ -1,32 +1,41 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, FlatList, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, TextInput } from 'react-native';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
-import { getEmployeesAction } from '../actions/employeesActions';
+import { employeesGetAction, employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
+import { NavigationEvents } from 'react-navigation';
 
 class EmployeesDetailScreen extends React.Component {
 
     state = {
         employee: this.props.navigation.getParam('employee'),
-        name: this.props.navigation.getParam('employee').name,
-        phone: this.props.navigation.getParam('employee').phone,
-        shift: this.props.navigation.getParam('employee').shift
+        name: '',
+        phone: '',
+        shift: ''
     }
 
-    checkIfUserAuthenticated() {
-        const { token, exp } = this.props.currentUser;
-        if (token) {
-            if (Date.now() > exp) {
-                console.log('This users token has expired go fuck yourself');
-                navigate('AuthFlow');
-            } else {
-                console.log('Current user has the token its okay');
-            }
+    async checkIfUserAuthenticated() {
+        const token = await AsyncStorage.getItem('token');
+        const exp = await AsyncStorage.getItem('token');
+        if (token && exp) {
+            if (Date.now() > exp) { navigate('AuthFlow'); }
         } else {
-            console.log('This users token is not event exist how did you even get here');
             navigate('AuthFlow');
         }
+    }
+
+    displayInfo() {
+        if (this.props.loading) {
+            return <ActivityIndicator size="large" color="#0000ff" />;
+        }
+        if (this.props.msg) {
+            return <Text>{this.props.msg}</Text>;
+        }
+        if (this.error) {
+            return <Text>{this.props.error}</Text>;
+        }
+        return null;
     }
 
     displayEmployeeDetail(employee) {
@@ -34,6 +43,13 @@ class EmployeesDetailScreen extends React.Component {
         if (employee) {
             return (
                 <View>
+                    <NavigationEvents 
+                        onDidFocus={() => {
+                            const { name, phone, shift } = this.state.employee;
+                            this.setState({ name, phone, shift });
+                        }} 
+                    />
+
                     <TextInput
                         value={this.state.name}
                         onChangeText={(newText) => {
@@ -78,15 +94,17 @@ class EmployeesDetailScreen extends React.Component {
 
                         }}
                     />
+
+                    {this.displayInfo()}
                 </View>
             );
         }
 
         return null;
-    }   
+    }
 
     componentDidMount() {
-
+        this.checkIfUserAuthenticated();
     }
 
     render() {
@@ -104,7 +122,10 @@ const styles = StyleSheet.create({
 
 function mapStateToProps(state) {
     return {
-        currentUser: state.auth.currentUser
+        currentUser: state.authReducer.currentUser,
+        error: state.employeesReducer.error,
+        loading: state.employeesReducer.loading,
+        msg: state.employeesReducer.msg
     };
 }
 
@@ -112,17 +133,16 @@ function mapDispatchToProps(dispatch) {
     return {
         editEmployee: async ({ name, phone, shift, employeeId }) => {
             try {
-                console.log(name, phone, shift, employeeId);
+                dispatch(employeesLoadingAction(true));
                 await managerApi.post('/employees/edit', { name, phone, shift, employeeId });
                 const response = await managerApi.get('/employees');
                 const employees = response.data;
-                dispatch(getEmployeesAction(employees));
+                dispatch(employeesGetAction(employees));
             } catch (error) {
                 console.log(error.message);
+                dispatch(employeesErrorAction('Something went wrong while saving employee'));
             }
-
         }
-
     };
 }
 
