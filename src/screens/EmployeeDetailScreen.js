@@ -39,35 +39,6 @@ class EmployeeDetailScreen extends React.Component {
         return null;
     }
 
-    displayEmployeeDetail(employee) {
-
-        if (employee) {
-            return (
-                <View>
-                    <NavigationEvents 
-                        onDidFocus={() => {
-                            const { name, phone, shift } = this.state.employee;
-                            this.setState({ name, phone, shift });
-                        }} 
-                    />
-
-                    <EmployeeDetailForm
-                        employee={this.state.employee}
-                        name={this.state.name}
-                        phone={this.state.phone}
-                        shift={this.state.shift}
-                        onSave={this.props.editEmployee}
-                        onFire={this.props.deleteEmployee}
-                    />
-
-                    {this.displayInfo()}
-                </View>
-            );
-        }
-
-        return null;
-    }
-
     componentDidMount() {
         this.checkIfUserAuthenticated();
         const { name, phone, shift } = this.state.employee;
@@ -76,16 +47,25 @@ class EmployeeDetailScreen extends React.Component {
 
     render() {
         return (
-            this.displayEmployeeDetail(this.state.employee)
+            <View>
+                <NavigationEvents 
+                    onDidFocus={() => {
+                        const { name, phone, shift } = this.state.employee;
+                        this.setState({ name, phone, shift });
+                    }} 
+                />
+
+                <EmployeeDetailForm
+                    employee={this.state.employee}
+                    onSave={this.props.editEmployee}
+                    onFire={this.props.deleteEmployee}
+                />
+
+                {this.displayInfo()}
+            </View>
         );
     };
 };
-
-const styles = StyleSheet.create({
-    detailSection: {
-        flexDirection: 'row'
-    }
-});
 
 function mapStateToProps(state) {
     return {
