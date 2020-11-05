@@ -1,16 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, FlatList, TextInput } from 'react-native';
-import AuthForm from '../components/AuthForm';
-import { loadingAction, signoutAction } from '../actions/authActions';
-import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
+import { getEmployeesAction } from '../actions/employeesActions';
 
 class EmployeesDetailScreen extends React.Component {
 
     state = {
-        employee: this.props.navigation.getParam('employee')
+        employee: this.props.navigation.getParam('employee'),
+        name: this.props.navigation.getParam('employee').name,
+        phone: this.props.navigation.getParam('employee').phone,
+        shift: this.props.navigation.getParam('employee').shift
     }
 
     checkIfUserAuthenticated() {
@@ -33,14 +34,34 @@ class EmployeesDetailScreen extends React.Component {
         if (employee) {
             return (
                 <View>
-                    <Text>{this.state.employee.name}</Text>
-                    <Text>{this.state.employee.phone}</Text>
-                    <Text>{this.state.employee.shift}</Text>
+                    <TextInput
+                        value={this.state.name}
+                        onChangeText={(newText) => {
+                            this.setState({ name: newText });
+                        }}
+                        
+                    />
+
+                    <TextInput
+                        value={this.state.phone.toString()}
+                        onChangeText={(newText) => {
+                            this.setState({ phone: newText });
+                        }}
+                    />
+
+                    <TextInput
+                        value={this.state.shift}
+                        onChangeText={(newText) => {
+                            this.setState({ shift: newText });
+                        }}
+                    />
 
                     <Button
                         title="Save"
                         onPress={() => {
-                            
+                            const { name, phone, shift } = this.state;
+                            const employeeId = this.state.employee._id;
+                            this.props.editEmployee({ name, phone, shift, employeeId });
                         }}
                     />
 
@@ -65,7 +86,7 @@ class EmployeesDetailScreen extends React.Component {
     }   
 
     componentDidMount() {
-        
+
     }
 
     render() {
@@ -75,20 +96,34 @@ class EmployeesDetailScreen extends React.Component {
     };
 };
 
+const styles = StyleSheet.create({
+    detailSection: {
+        flexDirection: 'row'
+    }
+});
+
 function mapStateToProps(state) {
     return {
-        currentUser: state.auth.currentUser,
-        employees: state.employees.employees
+        currentUser: state.auth.currentUser
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        fireEmployee: ({ _id }) => {
-            console.log(_id);
+        editEmployee: async ({ name, phone, shift, employeeId }) => {
+            try {
+                console.log(name, phone, shift, employeeId);
+                await managerApi.post('/employees/edit', { name, phone, shift, employeeId });
+                const response = await managerApi.get('/employees');
+                const employees = response.data;
+                dispatch(getEmployeesAction(employees));
+            } catch (error) {
+                console.log(error.message);
+            }
+
         }
+
     };
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(EmployeesDetailScreen);

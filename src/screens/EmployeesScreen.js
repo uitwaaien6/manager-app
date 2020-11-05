@@ -7,6 +7,7 @@ import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { getEmployeesAction } from '../actions/employeesActions';
+import { NavigationEvents } from 'react-navigation';
 
 class EmployeesScreen extends React.Component {
 
@@ -34,11 +35,17 @@ class EmployeesScreen extends React.Component {
     render() {
         return (
             <View>
+                <NavigationEvents 
+                    onDidFocus={() => {
+                        this.props.getEmployees();
+                    }} 
+                />
+
                 <Text> Employees Screen</Text>
 
                 <FlatList
                     data={this.props.employees}
-                    keyExtractor={item => item.phone}
+                    keyExtractor={item => item._id.toString()}
                     renderItem={({ item, index }) => {
                         return (
                             <View>
@@ -79,6 +86,7 @@ function mapDispatchToProps(dispatch) {
             const response = await managerApi.get('/employees');
             const employees = response.data;
             dispatch(getEmployeesAction(employees));
+            console.log(employees);
         },
         signout: async () => {
             await AsyncStorage.removeItem('token');

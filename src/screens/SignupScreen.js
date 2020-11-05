@@ -12,7 +12,7 @@ class SignupScreen extends React.Component {
     async checkIfUserAuthenticated() {
         const token = await AsyncStorage.getItem('token');
         const exp = await AsyncStorage.getItem('expiration');
-        console.log(token, exp);
+
         if (token) {
             if (Date.now() > exp) {
                 console.log('This users token has expired go fuck yourself');
