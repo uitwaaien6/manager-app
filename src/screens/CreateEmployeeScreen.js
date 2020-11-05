@@ -4,6 +4,7 @@ import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
+import CreateEmployeeForm from '../components/CreateEmployeeForm';
 
 class CreateEmployeeScreen extends React.Component {
 
@@ -43,44 +44,16 @@ class CreateEmployeeScreen extends React.Component {
     render() {
         return (
             <View>
-                <TextInput
-                    placeholder="Name"
-                    value={this.state.name}
-                    onChangeText={(newText) => {
-                        this.setState({ name: newText });
-                    }}
+                <CreateEmployeeForm
+                    onAddEmployee={this.props.addEmployee}
                 />
-
-                <TextInput
-                    placeholder="Phone"
-                    value={this.state.phone}
-                    onChangeText={(newText) => {
-                        this.setState({ phone: newText });
-                    }}
-                />
-
-                <TextInput
-                    placeholder="Shift"
-                    value={this.state.shift}
-                    onChangeText={(newText) => {
-                        this.setState({ shift: newText });
-                    }}
-                />
-
-                <Button
-                    title="Add Employee"
-                    onPress={() => {
-                        const { name, phone, shift } = this.state;
-                        this.props.addEmployee({ name, phone, shift });
-                        this.setState({ name: null, phone: null, shift: null });
-                    }}
-                />
-
                 {this.displayInfo()}
             </View>
         );
     };
 };
+
+
 
 function mapStateToProps(state) {
     return {

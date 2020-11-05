@@ -32,8 +32,6 @@ class EmployeesScreen extends React.Component {
                     }} 
                 />
 
-                <Text> Employees Screen</Text>
-
                 <FlatList
                     data={this.props.employees}
                     keyExtractor={item => item._id.toString()}
@@ -43,7 +41,7 @@ class EmployeesScreen extends React.Component {
                                 <TouchableOpacity
                                     onPress={() => {
                                         const employee = item;
-                                        navigate('EmployeesDetail', { employee });
+                                        navigate('EmployeeDetail', { employee });
                                     }}
                                 >
                                     <Text>{item.name}</Text>

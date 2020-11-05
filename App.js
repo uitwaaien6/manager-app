@@ -7,7 +7,7 @@ import SigninScreen from './src/screens/SigninScreen';
 import SignupScreen from './src/screens/SignupScreen';
 import EmployeesScreen from './src/screens/EmployeesScreen';
 import CreateEmployeeScreen from './src/screens/CreateEmployeeScreen';
-import EmployeesDetailScreen from './src/screens/EmployeesDetailScreen';
+import EmployeeDetailScreen from './src/screens/EmployeeDetailScreen';
 import { setNavigator } from './src/navigation/navigationRef';
 import initializeStore from './src/stores/store';
 
@@ -20,7 +20,7 @@ const navigator = createSwitchNavigator({
     EmployeesFlow: createStackNavigator({ 
       Employees: EmployeesScreen,
       CreateEmployee: CreateEmployeeScreen,
-      EmployeesDetail: EmployeesDetailScreen
+      EmployeeDetail: EmployeeDetailScreen
     }),
 
   })

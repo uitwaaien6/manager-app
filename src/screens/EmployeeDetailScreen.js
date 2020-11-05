@@ -5,8 +5,9 @@ import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesGetAction, employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
 import { NavigationEvents } from 'react-navigation';
+import EmployeeDetailForm from '../components/EmployeeDetailForm';
 
-class EmployeesDetailScreen extends React.Component {
+class EmployeeDetailScreen extends React.Component {
 
     state = {
         employee: this.props.navigation.getParam('employee'),
@@ -50,49 +51,13 @@ class EmployeesDetailScreen extends React.Component {
                         }} 
                     />
 
-                    <TextInput
-                        value={this.state.name}
-                        onChangeText={(newText) => {
-                            this.setState({ name: newText });
-                        }}
-                        
-                    />
-
-                    <TextInput
-                        value={this.state.phone.toString()}
-                        onChangeText={(newText) => {
-                            this.setState({ phone: newText });
-                        }}
-                    />
-
-                    <TextInput
-                        value={this.state.shift}
-                        onChangeText={(newText) => {
-                            this.setState({ shift: newText });
-                        }}
-                    />
-
-                    <Button
-                        title="Save"
-                        onPress={() => {
-                            const { name, phone, shift } = this.state;
-                            const employeeId = this.state.employee._id;
-                            this.props.editEmployee({ name, phone, shift, employeeId });
-                        }}
-                    />
-
-                    <Button
-                        title="Text Schedule"
-                        onPress={() => {
-
-                        }}
-                    />
-
-                    <Button
-                        title="Fire"
-                        onPress={() => {
-
-                        }}
+                    <EmployeeDetailForm
+                        employee={this.state.employee}
+                        name={this.state.name}
+                        phone={this.state.phone}
+                        shift={this.state.shift}
+                        onSave={this.props.editEmployee}
+                        onFire={this.props.deleteEmployee}
                     />
 
                     {this.displayInfo()}
@@ -105,6 +70,8 @@ class EmployeesDetailScreen extends React.Component {
 
     componentDidMount() {
         this.checkIfUserAuthenticated();
+        const { name, phone, shift } = this.state.employee;
+        this.setState({ name, phone, shift });
     }
 
     render() {
@@ -142,8 +109,20 @@ function mapDispatchToProps(dispatch) {
                 console.log(error.message);
                 dispatch(employeesErrorAction('Something went wrong while saving employee'));
             }
+
+        },
+        deleteEmployee: async (employeeId) => {
+                try {
+                    dispatch(employeesLoadingAction(true));
+                    await managerApi.post('/employees/delete', { employeeId });
+                    dispatch(employeesLoadingAction(false));
+                    navigate('Employees');
+                } catch (error) {
+                    console.log(error.message);
+                    dispatch(employeesErrorAction('Something went wrong while saving employee'));
+                }
         }
     };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmployeesDetailScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(EmployeeDetailScreen);
