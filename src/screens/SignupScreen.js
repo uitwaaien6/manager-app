@@ -30,8 +30,8 @@ class SignupScreen extends React.Component {
 
     displayInfo() {
         if (this.props.loading) return <ActivityIndicator size="large" color="#0000ff" />;
-        if (this.props.msg) return <Text>{this.props.msg}</Text>;
-        if (this.props.error) return <Text>{this.props.error}</Text>;
+        if (this.props.msg) return <Text style={{ color: 'red', textAlign: 'center', padding: 20, fontSize: 22, fontWeight: 'bold' }}>{this.props.msg}</Text>;
+        if (this.props.error) return <Text style={{ color: 'red', textAlign: 'center', padding: 20, fontSize: 22, fontWeight: 'bold' }}>{this.props.error}</Text>;
         return null;
     }
 
@@ -78,14 +78,15 @@ function mapDispatchToProps(dispatch) {
                 const passwordEncryption = encryptPassword(password);
                 const passwordConfirmEncryption = encryptPassword(passwordConfirm)
                 const response = await managerApi.post('/signup', { userName, email, passwordEncryption, passwordConfirmEncryption });
+                await AsyncStorage.removeItem('token');
+                await AsyncStorage.removeItem('expiration');
+                await AsyncStorage.removeItem('status');
                 const { status } = response.data;
-                console.log(status);
                 const verificationMsg = `We have sent a verification link to your email pleace check, it is ${status}` ;
                 dispatch(authSignupAction({ verificationMsg }));
-                
             } catch (error) {
                 console.log(error);
-                dispatch(authErrorAction('Invalid email address !'));
+                dispatch(authErrorAction('Something went wrong in signup, please make sure your email addres and password is valid!'));
             }
         }
     }

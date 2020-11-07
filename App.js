@@ -5,7 +5,6 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Provider } from 'react-redux';
 import SigninScreen from './src/screens/SigninScreen';
 import SignupScreen from './src/screens/SignupScreen';
-import EmailVerificationScreen from './src/screens/EmailVerificationScreen';
 import EmployeesScreen from './src/screens/EmployeesScreen';
 import CreateEmployeeScreen from './src/screens/CreateEmployeeScreen';
 import EmployeeDetailScreen from './src/screens/EmployeeDetailScreen';
@@ -15,8 +14,7 @@ import initializeStore from './src/stores/store';
 const navigator = createSwitchNavigator({
   AuthFlow: createStackNavigator({ 
     Signup: SignupScreen, 
-    Signin: SigninScreen,
-    EmailVerification: EmailVerificationScreen
+    Signin: SigninScreen
   }),
   MainFlow: createBottomTabNavigator({ 
     EmployeesFlow: createStackNavigator({ 

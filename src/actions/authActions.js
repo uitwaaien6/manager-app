@@ -33,10 +33,3 @@ export function authLoadingAction(payload) {
         payload
     };
 };
-
-export function authUpdateStatusAction(payload) {
-    return {
-        type: authTypes.AUTH_UPDATE_STATUS,
-        payload
-    };
-}

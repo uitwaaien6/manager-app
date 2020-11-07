@@ -11,13 +11,32 @@ class SigninScreen extends React.Component {
 
     displayInfo() {
         if (this.props.loading) {
-            return <ActivityIndicator size="large" color="#0000ff" />;
+            return (
+                <ActivityIndicator 
+                    size="large" 
+                    color="#0000ff"
+                />
+            );
         }
         if (this.props.msg) {
-            return <Text>{this.props.msg}</Text>;
+            return (
+                <Text style={styles.message}>{this.props.msg}</Text>
+            );
         }
-        if (this.error) {
-            return <Text>{this.props.error}</Text>;
+        if (this.props.error) {
+            return (
+                <View>
+                    <Text style={styles.message}>{this.props.error}</Text>
+                    {
+                        this.props.error === 'Please Verify Your email'
+                        ? <Button
+                            title="Resend verification Link"
+                            onPress={this.props.resendLink}
+                        /> 
+                        : null
+                    }
+                </View>
+            );
         }
         return null;
     }
@@ -42,8 +61,14 @@ class SigninScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'purple',
-        height: '100%'
+
+    },
+    message: {
+        color: 'red',
+        textAlign: 'center',
+        padding: 20,
+        fontSize: 22,
+        fontWeight: 'bold'
     }
 })
 
@@ -62,18 +87,29 @@ function mapDispatchToProps(dispatch) {
             try {
                 dispatch(authLoadingAction(true));
                 const passwordEncryption = encryptPassword(password);
-                const response = await managerApi.post('/signin', { email: email.toLowerCase(), passwordEncryption });
-                const { token, jwtExpiration, status } = response.data;
+                const signinResponse = await managerApi.post('/signin', { email: email.toLowerCase(), passwordEncryption });
+                const { token, jwtExpiration } = signinResponse.data;
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('jwtExpiration', jwtExpiration.toString());
-                await AsyncStorage.setItem('status', status);
-                dispatch(authSigninAction({ token, jwtExpiration: jwtExpiration.toString(), status }));
-                navigate('EmailVerification');
+                dispatch(authSigninAction({ token, jwtExpiration: jwtExpiration.toString() }));
+
+                await managerApi.get('/api/auth/verification/verify-account/check-user-status');
             } catch (error) {
-                const message = 'Something went wrong while signing in';
+                let message = '';
+                if (error.message === 'Request failed with status code 401') {  message = 'Please Verify Your email'; } 
+                else { message = 'Something went wrong in Signin!'; }
                 dispatch(authErrorAction(message));
             }
-            navigate('EmailVerification');
+        },
+        resendLink: async () => {
+            try {
+                dispatch(authLoadingAction(true));
+                await managerApi.get('/api/auth/verification/verify-account/resend-link');
+                dispatch(authLoadingAction(false));
+            } catch (error) {
+                console.log(error.message);
+                dispatch(authErrorAction('Error while resending email verification link'));
+            }
         }
     }
 }
