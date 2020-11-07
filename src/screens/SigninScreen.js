@@ -9,23 +9,43 @@ import { navigate } from '../navigation/navigationRef';
 
 class SigninScreen extends React.Component {
 
+    displayInfo() {
+        if (this.props.loading) {
+            return <ActivityIndicator size="large" color="#0000ff" />;
+        }
+        if (this.props.msg) {
+            return <Text>{this.props.msg}</Text>;
+        }
+        if (this.error) {
+            return <Text>{this.props.error}</Text>;
+        }
+        return null;
+    }
+
     componentDidMount() {
 
     }
 
     render() {
         return (
-            <View>
+            <View style={styles.container}>
                 <AuthForm
                     title="Signin"
                     onSubmit={this.props.signin}
                 />
-                {this.props.loading ? <ActivityIndicator size="small" color="#0000ff" /> : null}
-                {this.props.error ? <Text>{this.props.error}</Text> : null}
+
+                {this.displayInfo()}
             </View>
         );
     };
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'purple',
+        height: '100%'
+    }
+})
 
 function mapStateToProps(state) {
     return {
@@ -42,16 +62,18 @@ function mapDispatchToProps(dispatch) {
             try {
                 dispatch(authLoadingAction(true));
                 const passwordEncryption = encryptPassword(password);
-                const response = await managerApi.post('/signin', { email, passwordEncryption });
-                const { token, expiration } = response.data;
+                const response = await managerApi.post('/signin', { email: email.toLowerCase(), passwordEncryption });
+                const { token, jwtExpiration, status } = response.data;
                 await AsyncStorage.setItem('token', token);
-                await AsyncStorage.setItem('expiration', expiration.toString());
-                dispatch(authSigninAction({ token, expiration: expiration.toString() }));
-                navigate('MainFlow');
+                await AsyncStorage.setItem('jwtExpiration', jwtExpiration.toString());
+                await AsyncStorage.setItem('status', status);
+                dispatch(authSigninAction({ token, jwtExpiration: jwtExpiration.toString(), status }));
+                navigate('EmailVerification');
             } catch (error) {
                 const message = 'Something went wrong while signing in';
                 dispatch(authErrorAction(message));
             }
+            navigate('EmailVerification');
         }
     }
 }

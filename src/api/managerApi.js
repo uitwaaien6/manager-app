@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 
 import { navigate } from '../navigation/navigationRef';
 
 const instance = axios.create({
-    baseURL: 'https://f53be586d3d4.ngrok.io'
+    baseURL: 'https://ff091a243e67.ngrok.io'
 });
 
 instance.interceptors.request.use(
@@ -11,12 +11,12 @@ instance.interceptors.request.use(
 
         try {
             const token = await AsyncStorage.getItem('token');
-            const expiration = await AsyncStorage.getItem('expiration');
+            const jwtExpiration = await AsyncStorage.getItem('jwtExpiration');
 
-            if (token && expiration) {
-                if (Date.now() > parseFloat(expiration)) {
+            if (token && jwtExpiration) {
+                if (Date.now() > parseFloat(jwtExpiration)) {
                     await AsyncStorage.removeItem('token');
-                    await AsyncStorage.removeItem('expiration');
+                    await AsyncStorage.removeItem('jwtExpiration');
                     navigate('AuthFlow');
                     return config;
                 } else {

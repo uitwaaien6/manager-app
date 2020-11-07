@@ -53,15 +53,12 @@ class CreateEmployeeScreen extends React.Component {
     };
 };
 
-
-
 function mapStateToProps(state) {
     return {
         currentUser: state.authReducer.currentUser,
         error: state.employeesReducer.error,
         loading: state.employeesReducer.loading,
-        msg: state.employeesReducer.msg,
-        employees: state.employeesReducer.employees
+        msg: state.employeesReducer.msg
     };
 }
 
@@ -73,7 +70,7 @@ function mapDispatchToProps(dispatch) {
                 await managerApi.post('/employees', { name, phone, shift });
                 dispatch(employeesLoadingAction(false));
             } catch (error) {
-                dispatch(employeesErrorAction(error.message));
+                dispatch(employeesErrorAction('Something went wrong while creating an employee!'));
                 console.log(error.message);
             }
         }

@@ -10,18 +10,29 @@ import { navigate } from '../navigation/navigationRef';
 class SignupScreen extends React.Component {
 
     async checkIfUserAuthenticated() {
-        const token = await AsyncStorage.getItem('token');
-        const exp = await AsyncStorage.getItem('expiration');
-
-        if (token && exp) {
-            if (Date.now() > exp) {
-                navigate('AuthFlow');
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const exp = await AsyncStorage.getItem('expiration');
+    
+            if (token && exp) {
+                if (Date.now() > exp) {
+                    navigate('AuthFlow');
+                } else {
+                    navigate('MainFlow');
+                }
             } else {
-                navigate('MainFlow');
+                navigate('AuthFlow');
             }
-        } else {
-            navigate('AuthFlow');
+        } catch (error) {
+            console.log(error.message);
         }
+    }
+
+    displayInfo() {
+        if (this.props.loading) return <ActivityIndicator size="large" color="#0000ff" />;
+        if (this.props.msg) return <Text>{this.props.msg}</Text>;
+        if (this.props.error) return <Text>{this.props.error}</Text>;
+        return null;
     }
 
     componentDidMount() {
@@ -43,9 +54,8 @@ class SignupScreen extends React.Component {
                         this.props.navigation.navigate('Signin');
                     }}
                 />
-                {this.props.loading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
-                {this.props.msg ? <Text>{this.props.msg}</Text> : null}
-                {this.props.error ? <Text>{this.props.error}</Text> : null}
+
+                {this.displayInfo()}
             </View>
         );
     };
@@ -68,10 +78,11 @@ function mapDispatchToProps(dispatch) {
                 const passwordEncryption = encryptPassword(password);
                 const passwordConfirmEncryption = encryptPassword(passwordConfirm)
                 const response = await managerApi.post('/signup', { userName, email, passwordEncryption, passwordConfirmEncryption });
-                const { token, expiration } = response.data;
-                await AsyncStorage.setItem('token', token);
-                await AsyncStorage.setItem('expiration', expiration.toString());
-                dispatch(authSignupAction({ token, expiration: expiration.toString() }));
+                const { status } = response.data;
+                console.log(status);
+                const verificationMsg = `We have sent a verification link to your email pleace check, it is ${status}` ;
+                dispatch(authSignupAction({ verificationMsg }));
+                
             } catch (error) {
                 console.log(error);
                 dispatch(authErrorAction('Invalid email address !'));

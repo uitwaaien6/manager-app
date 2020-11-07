@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",
+    "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "^0.1.10",
     "axios": "^0.21.0",
     "email-validator": "^2.0.4",
@@ -18,7 +19,9 @@
     "jwt-decoder": "0.0.0",
     "react": "16.13.1",
     "react-native": "0.63.3",
+    "react-native-geolocation-service": "^5.0.0",
     "react-native-gesture-handler": "^1.8.0",
+    "react-native-maps": "^0.27.1",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",

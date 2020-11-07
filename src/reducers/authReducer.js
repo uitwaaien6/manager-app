@@ -3,7 +3,8 @@ import * as authTypes from '../actions/authTypes';
 const initialState = {
     currentUser: {
         token: null,
-        exp: null
+        exp: null,
+        status: null
     },
     loading: false,
     error: null,
@@ -13,15 +14,17 @@ const initialState = {
 function authReducer(state = initialState, action) {
     switch (action.type) {
         case authTypes.AUTH_SIGNUP:
-            return { ...state, currentUser: { token: action.payload.token, exp: action.payload.expiration }, msg: 'Succesfully signed up', error: null, loading: false };
+            return { ...state, msg: action.payload.verificationMsg, error: null, loading: false };
         case authTypes.AUTH_SIGNIN:
-            return { ...state, currentUser: { token: action.payload.token, exp: action.payload.expiration }, error: null, loading: false };
+            return { ...state, currentUser: { token: action.payload.token, exp: action.payload.expiration, status: action.payload.status }, error: null, loading: false };
         case authTypes.AUTH_SIGNOUT:
             return { ...state, currentUser: { token: null, exp: null }, msg: 'Succesfully logged out' }; 
         case authTypes.AUTH_ERROR:
             return { ...state, error: action.payload, msg: null, loading: null };
         case authTypes.AUTH_LOADING:
             return { ...state, loading: action.payload };
+        case authTypes.AUTH_UPDATE_STATUS:
+            return { ...state, currentUser: { ...currentUser, status: action.payload } };
         default:
             return state;
     };

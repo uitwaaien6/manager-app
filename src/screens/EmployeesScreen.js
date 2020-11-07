@@ -25,7 +25,7 @@ class EmployeesScreen extends React.Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.container}>
                 <NavigationEvents 
                     onDidFocus={() => {
                         this.props.getEmployees();
@@ -44,7 +44,11 @@ class EmployeesScreen extends React.Component {
                                         navigate('EmployeeDetail', { employee });
                                     }}
                                 >
-                                    <Text>{item.name}</Text>
+                                    <View style={styles.employee}>
+                                        <Text style={{ fontSize: 24 }}>{item.name}</Text>
+                                        <Text style={{ fontSize: 24, fontWeight: 'bold' }}>#{index + 1}</Text>
+                                    </View>
+
                                 </TouchableOpacity>
                             </View>
                         );
@@ -68,6 +72,25 @@ class EmployeesScreen extends React.Component {
         );
     };
 };
+
+const styles = StyleSheet.create({
+    container: {
+        backgroundColor: 'yellow',
+        height: '100%'
+    },
+    employee: {
+        borderRadius: 8,
+        borderWidth: 2,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '80%',
+        padding: 10
+    },
+    employeeText: {
+        
+    }
+})
 
 function mapStateToProps(state) {
     return {

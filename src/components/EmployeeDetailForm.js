@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, TextInput } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 
 class EmployeeDetailForm extends React.Component {
 
