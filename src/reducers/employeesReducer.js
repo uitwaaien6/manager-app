@@ -10,7 +10,7 @@ const initialState = {
 function employeesReducer(state = initialState, action) {
     switch (action.type) {
         case employeesTypes.EMPLOYEES_GET:
-            return { ...state, employees: action.payload, loading: false };
+            return { ...state, employees: action.payload, loading: false, error: null };
         case employeesTypes.EMPLOYEES_LOADING:
             return { ...state, loading: action.payload };
         case employeesTypes.EMPLOYEES_ERROR:

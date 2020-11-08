@@ -1,48 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Button, AsyncStorage, TextInput } from 'react-native';
 import AuthForm from '../components/AuthForm';
-import { authSigninAction, authErrorAction, authLoadingAction } from '../actions/authActions';
-import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
-import managerApi from '../api/managerApi';
+import DisplayPageInfo from '../components/DisplayPageInfo';
 import { connect } from 'react-redux';
+import managerApi from '../api/managerApi';
 import { navigate } from '../navigation/navigationRef';
+import { encryptPassword } from '../encryption/coefficientFairEncryption';
+import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
+import { authSigninAction, authErrorAction, authLoadingAction } from '../actions/authActions';
 
 class SigninScreen extends React.Component {
 
-    displayInfo() {
-        if (this.props.loading) {
-            return (
-                <ActivityIndicator 
-                    size="large" 
-                    color="#0000ff"
-                />
-            );
-        }
-        if (this.props.msg) {
-            return (
-                <Text style={styles.message}>{this.props.msg}</Text>
-            );
-        }
-        if (this.props.error) {
-            return (
-                <View>
-                    <Text style={styles.message}>{this.props.error}</Text>
-                    {
-                        this.props.error === 'Please Verify Your email'
-                        ? <Button
-                            title="Resend verification Link"
-                            onPress={this.props.resendLink}
-                        /> 
-                        : null
-                    }
-                </View>
-            );
-        }
-        return null;
-    }
-
     componentDidMount() {
-
+        checkIfUserAuthenticated();
     }
 
     render() {
@@ -53,7 +23,16 @@ class SigninScreen extends React.Component {
                     onSubmit={this.props.signin}
                 />
 
-                {this.displayInfo()}
+                <Button
+                    title="Forgot your password?"
+                    onPress={() => {
+                        
+                    }}
+                />
+
+                <DisplayPageInfo
+                    info={this.props}
+                />
             </View>
         );
     };
@@ -62,15 +41,8 @@ class SigninScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
 
-    },
-    message: {
-        color: 'red',
-        textAlign: 'center',
-        padding: 20,
-        fontSize: 22,
-        fontWeight: 'bold'
     }
-})
+});
 
 function mapStateToProps(state) {
     return {
@@ -92,8 +64,8 @@ function mapDispatchToProps(dispatch) {
                 await AsyncStorage.setItem('token', token);
                 await AsyncStorage.setItem('jwtExpiration', jwtExpiration.toString());
                 dispatch(authSigninAction({ token, jwtExpiration: jwtExpiration.toString() }));
-
                 await managerApi.get('/api/auth/verification/verify-account/check-user-status');
+                navigate('MainFlow');
             } catch (error) {
                 let message = '';
                 if (error.message === 'Request failed with status code 401') {  message = 'Please Verify Your email'; } 
@@ -105,6 +77,8 @@ function mapDispatchToProps(dispatch) {
             try {
                 dispatch(authLoadingAction(true));
                 await managerApi.get('/api/auth/verification/verify-account/resend-link');
+                await AsyncStorage.removeItem('token');
+                await AsyncStorage.removeItem('expiration');
                 dispatch(authLoadingAction(false));
             } catch (error) {
                 console.log(error.message);

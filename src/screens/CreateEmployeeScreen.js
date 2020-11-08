@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator, TextInput } from 'react-native';
+import { View, Text, StyleSheet, AsyncStorage, ActivityIndicator } from 'react-native';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
-import { navigate } from '../navigation/navigationRef';
 import { employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
 import CreateEmployeeForm from '../components/CreateEmployeeForm';
+import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
+import DisplayPageInfo from '../components/DisplayPageInfo';
 
 class CreateEmployeeScreen extends React.Component {
 
@@ -14,31 +15,8 @@ class CreateEmployeeScreen extends React.Component {
         shift: null
     }
 
-    async checkIfUserAuthenticated() {
-        const token = await AsyncStorage.getItem('token');
-        const exp = await AsyncStorage.getItem('token');
-        if (token && exp) {
-            if (Date.now() > exp) { navigate('AuthFlow'); }
-        } else {
-            navigate('AuthFlow');
-        }
-    }
-
-    displayInfo() {
-        if (this.props.loading) {
-            return <ActivityIndicator size="large" color="#0000ff" />;
-        }
-        if (this.props.msg) {
-            return <Text>{this.props.msg}</Text>;
-        }
-        if (this.error) {
-            return <Text>{this.props.error}</Text>;
-        }
-        return null;
-    }
-
     componentDidMount() {
-        this.checkIfUserAuthenticated();
+        checkIfUserAuthenticated();
     }
 
     render() {
@@ -47,7 +25,10 @@ class CreateEmployeeScreen extends React.Component {
                 <CreateEmployeeForm
                     onAddEmployee={this.props.addEmployee}
                 />
-                {this.displayInfo()}
+                
+                <DisplayPageInfo
+                    info={this.props}
+                />
             </View>
         );
     };

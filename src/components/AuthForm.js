@@ -13,6 +13,7 @@ class AuthForm extends React.Component {
     initializeForm() {
         switch (this.props.title) {
             case "Signup":
+            case "Register":
                 return (
                     <View>
                         <TextInput
@@ -58,6 +59,7 @@ class AuthForm extends React.Component {
                     </View>
                 );
             case 'Signin':
+            case 'Login':
                 return (
                     <View>
                         <TextInput
@@ -86,6 +88,7 @@ class AuthForm extends React.Component {
                     </View>
                 );
             default:
+                console.log('AuthForm args is not valid to display the form');
                 return null;
         };
     };

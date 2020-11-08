@@ -1,42 +1,17 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, Button, AsyncStorage, Linking } from 'react-native';
 import AuthForm from '../components/AuthForm';
 import { authSignupAction, authErrorAction, authLoadingAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
-import { navigate } from '../navigation/navigationRef';
+import DisplayPageInfo from '../components/DisplayPageInfo';
+import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
 
 class SignupScreen extends React.Component {
 
-    async checkIfUserAuthenticated() {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const exp = await AsyncStorage.getItem('expiration');
-    
-            if (token && exp) {
-                if (Date.now() > exp) {
-                    navigate('AuthFlow');
-                } else {
-                    navigate('MainFlow');
-                }
-            } else {
-                navigate('AuthFlow');
-            }
-        } catch (error) {
-            console.log(error.message);
-        }
-    }
-
-    displayInfo() {
-        if (this.props.loading) return <ActivityIndicator size="large" color="#0000ff" />;
-        if (this.props.msg) return <Text style={{ color: 'red', textAlign: 'center', padding: 20, fontSize: 22, fontWeight: 'bold' }}>{this.props.msg}</Text>;
-        if (this.props.error) return <Text style={{ color: 'red', textAlign: 'center', padding: 20, fontSize: 22, fontWeight: 'bold' }}>{this.props.error}</Text>;
-        return null;
-    }
-
     componentDidMount() {
-        this.checkIfUserAuthenticated();
+        checkIfUserAuthenticated();
     }   
 
     render() {
@@ -55,11 +30,19 @@ class SignupScreen extends React.Component {
                     }}
                 />
 
-                {this.displayInfo()}
+                <DisplayPageInfo
+                    info={this.props}
+                />
             </View>
         );
     };
 };
+
+const styles = StyleSheet.create({
+    container: {
+
+    }
+});
 
 function mapStateToProps(state) {
     return {
@@ -79,8 +62,7 @@ function mapDispatchToProps(dispatch) {
                 const passwordConfirmEncryption = encryptPassword(passwordConfirm)
                 const response = await managerApi.post('/signup', { userName, email, passwordEncryption, passwordConfirmEncryption });
                 await AsyncStorage.removeItem('token');
-                await AsyncStorage.removeItem('expiration');
-                await AsyncStorage.removeItem('status');
+                await AsyncStorage.removeItem('jwtExpiration');
                 const { status } = response.data;
                 const verificationMsg = `We have sent a verification link to your email pleace check, it is ${status}` ;
                 dispatch(authSignupAction({ verificationMsg }));

@@ -4,8 +4,9 @@ import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesGetAction, employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
-import { NavigationEvents } from 'react-navigation';
 import EmployeeDetailForm from '../components/EmployeeDetailForm';
+import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
+import DisplayPageInfo from '../components/DisplayPageInfo';
 
 class EmployeeDetailScreen extends React.Component {
 
@@ -13,31 +14,8 @@ class EmployeeDetailScreen extends React.Component {
         employee: this.props.navigation.getParam('employee')
     }
 
-    async checkIfUserAuthenticated() {
-        const token = await AsyncStorage.getItem('token');
-        const exp = await AsyncStorage.getItem('token');
-        if (token && exp) {
-            if (Date.now() > exp) { navigate('AuthFlow'); }
-        } else {
-            navigate('AuthFlow');
-        }
-    }
-
-    displayInfo() {
-        if (this.props.loading) {
-            return <ActivityIndicator size="large" color="#0000ff" />;
-        }
-        if (this.props.msg) {
-            return <Text>{this.props.msg}</Text>;
-        }
-        if (this.error) {
-            return <Text>{this.props.error}</Text>;
-        }
-        return null;
-    }
-
     componentDidMount() {
-        this.checkIfUserAuthenticated();
+        checkIfUserAuthenticated();
         const { name, phone, shift } = this.state.employee;
         this.setState({ name, phone, shift });
     }
@@ -51,7 +29,9 @@ class EmployeeDetailScreen extends React.Component {
                     onFire={this.props.deleteEmployee}
                 />
 
-                {this.displayInfo()}
+                <DisplayPageInfo
+                    info={this.props}
+                />
             </View>
         );
     };

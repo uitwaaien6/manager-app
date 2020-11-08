@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 
 import { navigate } from '../navigation/navigationRef';
 
 const instance = axios.create({
-    baseURL: 'https://63437656ff2b.ngrok.io'
+    baseURL: 'https://a69b28465e81.ngrok.io'
 });
 
 instance.interceptors.request.use(

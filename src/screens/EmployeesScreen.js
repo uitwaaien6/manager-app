@@ -6,21 +6,12 @@ import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesGetAction } from '../actions/employeesActions';
 import { NavigationEvents } from 'react-navigation';
+import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
 
 class EmployeesScreen extends React.Component {
 
-    async checkIfUserAuthenticated() {
-        const token = await AsyncStorage.getItem('token');
-        const exp = await AsyncStorage.getItem('token');
-        if (token && exp) {
-            if (Date.now() > exp) { navigate('AuthFlow'); }
-        } else {
-            navigate('AuthFlow');
-        }
-    }
-
     componentDidMount() {
-        this.checkIfUserAuthenticated();
+        checkIfUserAuthenticated();
     }
 
     render() {
@@ -113,6 +104,7 @@ function mapDispatchToProps(dispatch) {
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('expiration');
             dispatch(authSignoutAction());
+            dispatch(employeesGetAction([]));
             navigate('AuthFlow');
         }
     }
