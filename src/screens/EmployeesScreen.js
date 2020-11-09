@@ -6,12 +6,12 @@ import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesGetAction } from '../actions/employeesActions';
 import { NavigationEvents } from 'react-navigation';
-import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
+import checkIfUserActive from '../check-user/checkIfUserActive';
 
 class EmployeesScreen extends React.Component {
 
     componentDidMount() {
-        checkIfUserAuthenticated();
+        checkIfUserActive();
     }
 
     render() {

@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesGetAction, employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
 import EmployeeDetailForm from '../components/EmployeeDetailForm';
-import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
+import checkIfUserActive from '../check-user/checkIfUserActive';
 import DisplayPageInfo from '../components/DisplayPageInfo';
 
 class EmployeeDetailScreen extends React.Component {
@@ -15,7 +15,7 @@ class EmployeeDetailScreen extends React.Component {
     }
 
     componentDidMount() {
-        checkIfUserAuthenticated();
+        checkIfUserActive();
         const { name, phone, shift } = this.state.employee;
         this.setState({ name, phone, shift });
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ActivityIndicator, Button } from 'react-native';
 
 class DisplayPageInfo extends React.Component {
 
@@ -15,19 +15,19 @@ class DisplayPageInfo extends React.Component {
 
         if (this.props.info.msg) {
             return (
-                <Text style={styles.message}>{this.props.msg}</Text>
+                <Text style={styles.message}>{this.props.info.msg}</Text>
             );
         }
         
         if (this.props.info.error) {
             return (
                 <View>
-                    <Text style={styles.message}>{this.props.error}</Text>
+                    <Text style={styles.message}>{this.props.info.error}</Text>
                     {
-                        this.props.error === 'Please Verify Your email'
+                        this.props.info.error === 'Please Verify Your email'
                         ? <Button
                             title="Resend verification Link"
-                            onPress={this.props.resendLink}
+                            onPress={this.props.info.resendLink}
                         /> 
                         : null
                     }

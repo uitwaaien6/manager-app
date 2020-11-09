@@ -5,6 +5,8 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { Provider } from 'react-redux';
 import SigninScreen from './src/screens/SigninScreen';
 import SignupScreen from './src/screens/SignupScreen';
+import PasswordResetCodeScreen from './src/screens/PasswordResetCodeScreen';
+import PasswordResetScreen from './src/screens/PasswordResetScreen';
 import EmployeesScreen from './src/screens/EmployeesScreen';
 import CreateEmployeeScreen from './src/screens/CreateEmployeeScreen';
 import EmployeeDetailScreen from './src/screens/EmployeeDetailScreen';
@@ -13,14 +15,30 @@ import initializeStore from './src/stores/store';
 
 const navigator = createSwitchNavigator({
   AuthFlow: createStackNavigator({ 
-    Signup: SignupScreen, 
-    Signin: SigninScreen
+    Signup: { 
+      screen: SignupScreen 
+    }, 
+    Signin: { 
+      screen: SigninScreen 
+    },
+    PasswordResetCode: {
+      screen: PasswordResetCodeScreen
+    },
+    PasswordReset: {
+      screen: PasswordResetScreen
+    }
   }),
   MainFlow: createBottomTabNavigator({ 
     EmployeesFlow: createStackNavigator({ 
-      Employees: EmployeesScreen,
-      CreateEmployee: CreateEmployeeScreen,
-      EmployeeDetail: EmployeeDetailScreen
+      Employees: { 
+        screen: EmployeesScreen 
+      },
+      CreateEmployee: { 
+        screen: CreateEmployeeScreen 
+      },
+      EmployeeDetail: { 
+        screen: EmployeeDetailScreen 
+      }
     }),
 
   })

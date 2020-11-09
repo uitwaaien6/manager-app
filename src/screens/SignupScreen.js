@@ -6,12 +6,12 @@ import { encryptPassword, decryptPassword } from '../encryption/coefficientFairE
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import DisplayPageInfo from '../components/DisplayPageInfo';
-import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
+import checkIfUserActive from '../check-user/checkIfUserActive';
 
 class SignupScreen extends React.Component {
 
     componentDidMount() {
-        checkIfUserAuthenticated();
+        checkIfUserActive();
     }   
 
     render() {

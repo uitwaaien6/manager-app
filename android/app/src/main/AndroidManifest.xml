@@ -22,15 +22,16 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
 
-        <intent-filter android:label="@string/filter_view_http_gizmos">
+        <intent-filter>
           <action android:name="android.intent.action.VIEW" />
           <category android:name="android.intent.category.DEFAULT" />
           <category android:name="android.intent.category.BROWSABLE" />
           <!-- Accepts URIs that begin with "http://www.example.com/gizmos” -->
           <data android:scheme="http"
-                android:host="a69b28465e81.ngrok.io"
+                android:host="7d58e3412fa1.ngrok.io"
                 android:pathPrefix="/api" />
-          <!-- note that the leading "/" is required for pathPrefix-->
+          <!-- note that the leading "/" is required for pathPrefix -->
+          <!-- android:label="@string/filter_view_http_gizmos -->
         </intent-filter>
 
       </activity>

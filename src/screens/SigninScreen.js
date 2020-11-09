@@ -6,13 +6,18 @@ import { connect } from 'react-redux';
 import managerApi from '../api/managerApi';
 import { navigate } from '../navigation/navigationRef';
 import { encryptPassword } from '../encryption/coefficientFairEncryption';
-import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
+import checkIfUserActive from '../check-user/checkIfUserActive';
 import { authSigninAction, authErrorAction, authLoadingAction } from '../actions/authActions';
+import ForgotPasswordForm from '../components/ForgotPasswordForm';
 
 class SigninScreen extends React.Component {
 
+    state = {
+        showForm: false
+    }
+
     componentDidMount() {
-        checkIfUserAuthenticated();
+        checkIfUserActive();
     }
 
     render() {
@@ -26,8 +31,13 @@ class SigninScreen extends React.Component {
                 <Button
                     title="Forgot your password?"
                     onPress={() => {
-                        
+                        this.setState({ showForm: !this.state.showForm });
                     }}
+                />
+
+                <ForgotPasswordForm
+                    showForm={this.state.showForm}
+                    onPasswordResetCodeSend={this.props.sendPasswordResetCode}
                 />
 
                 <DisplayPageInfo
@@ -83,6 +93,17 @@ function mapDispatchToProps(dispatch) {
             } catch (error) {
                 console.log(error.message);
                 dispatch(authErrorAction('Error while resending email verification link'));
+            }
+        },
+        sendPasswordResetCode: async ({ email }) => {
+            try {
+                dispatch(authLoadingAction(true));
+                await managerApi.post('/api/auth/verification/password-reset/generate-code', { email });
+                dispatch(authLoadingAction(false));
+                navigate('PasswordResetCode', { email });
+            } catch (error) {
+                console.log(error.message);
+                dispatch(authErrorAction('Something occured while sending password reset link'));
             }
         }
     }

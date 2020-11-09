@@ -4,7 +4,7 @@ import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
 import CreateEmployeeForm from '../components/CreateEmployeeForm';
-import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
+import checkIfUserActive from '../check-user/checkIfUserActive';
 import DisplayPageInfo from '../components/DisplayPageInfo';
 
 class CreateEmployeeScreen extends React.Component {
@@ -16,7 +16,7 @@ class CreateEmployeeScreen extends React.Component {
     }
 
     componentDidMount() {
-        checkIfUserAuthenticated();
+        checkIfUserActive();
     }
 
     render() {
