@@ -1,5 +1,6 @@
 import managerApi from '../api/managerApi';
 import { navigate } from '../navigation/navigationRef';
+import { AsyncStorage } from 'react-native';
 
 export default async function checkIfUserActive() {
     try {
