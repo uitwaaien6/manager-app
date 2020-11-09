@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesGetAction } from '../actions/employeesActions';
 import { NavigationEvents } from 'react-navigation';
-import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
+import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
 
 class EmployeesScreen extends React.Component {
 

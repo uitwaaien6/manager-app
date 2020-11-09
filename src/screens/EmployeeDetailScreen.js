@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
 import { employeesGetAction, employeesErrorAction, employeesLoadingAction } from '../actions/employeesActions';
 import EmployeeDetailForm from '../components/EmployeeDetailForm';
-import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
+import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
 import DisplayPageInfo from '../components/DisplayPageInfo';
 
 class EmployeeDetailScreen extends React.Component {

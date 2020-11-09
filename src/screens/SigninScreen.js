@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import managerApi from '../api/managerApi';
 import { navigate } from '../navigation/navigationRef';
 import { encryptPassword } from '../encryption/coefficientFairEncryption';
-import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
+import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
 import { authSigninAction, authErrorAction, authLoadingAction } from '../actions/authActions';
 
 class SigninScreen extends React.Component {

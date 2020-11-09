@@ -6,7 +6,7 @@ import { encryptPassword, decryptPassword } from '../encryption/coefficientFairE
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import DisplayPageInfo from '../components/DisplayPageInfo';
-import checkIfUserAuthenticated from '../components/checkIfUserAuthenticated';
+import checkIfUserAuthenticated from '../check-user/checkIfUserAuthenticated';
 
 class SignupScreen extends React.Component {
 
@@ -17,6 +17,8 @@ class SignupScreen extends React.Component {
     render() {
         return (
             <View>
+
+                
 
                 <AuthForm
                     title="Signup"
