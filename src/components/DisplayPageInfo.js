@@ -33,6 +33,8 @@ class DisplayPageInfo extends React.Component {
                     }
                 </View>
             );
+        } else {
+            
         }
         return null;
     }

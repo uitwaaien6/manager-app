@@ -67,7 +67,8 @@ function mapDispatchToProps(dispatch) {
             try {
                 dispatch(authLoadingAction(true));
                 // encrypt passwordResetCode before sending to the server
-                const response = await managerApi.post('/api/auth/verification/password-reset/verify-code', { email, passwordResetCode });
+                const passwordResetCodeEncryption = encryptPassword(passwordResetCode);
+                const response = await managerApi.post('/api/auth/verification/password-reset/verify-code', { email, passwordResetCodeEncryption });
                 dispatch(authLoadingAction(false));
                 const { success } = response.data;
                 if (success) {

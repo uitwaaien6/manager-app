@@ -25,6 +25,11 @@ class PasswordResetScreen extends React.Component {
                     onChangePassword={this.props.changePassword}
                 />
 
+                <Button
+                    title="Go to Signin"
+                    onPress={() => navigate('Signin')}
+                />
+
                 <DisplayPageInfo
                     info={this.props}
                 />
@@ -49,7 +54,7 @@ function mapDispatchToProps(dispatch) {
                 dispatch(authLoadingAction(true));
                 const newPasswordEncryption = encryptPassword(newPassword);
                 const newPasswordConfirmEncryption = encryptPassword(newPasswordConfirm);
-                await managerApi.post('/api/auth/verification/password-reset/reset-password', { email, newPasswordEncryption, newPasswordConfirmEncryption });
+                await managerApi.post('/api/auth/verification/password-reset/reset-password', { email: email.toLowerCase(), newPasswordEncryption, newPasswordConfirmEncryption });
                 dispatch(authLoadingAction(false));
 
             } catch (error) {
