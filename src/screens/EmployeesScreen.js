@@ -4,9 +4,10 @@ import { authSignoutAction } from '../actions/authActions';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
 import { navigate } from '../navigation/navigationRef';
-import { employeesGetAction } from '../actions/employeesActions';
+import { employeesGetAction, employeesLoadingAction } from '../actions/employeesActions';
 import { NavigationEvents } from 'react-navigation';
 import checkIfUserActive from '../check-user/checkIfUserActive';
+import DisplayPageInfo from '../components/DisplayPageInfo';
 
 class EmployeesScreen extends React.Component {
 
@@ -34,16 +35,25 @@ class EmployeesScreen extends React.Component {
                                         const employee = item;
                                         navigate('EmployeeDetail', { employee });
                                     }}
+                                    style={styles.employeesContainer}
                                 >
                                     <View style={styles.employee}>
                                         <Text style={{ fontSize: 24 }}>{item.name}</Text>
                                         <Text style={{ fontSize: 24, fontWeight: 'bold' }}>#{index + 1}</Text>
                                     </View>
 
+                                    
+
                                 </TouchableOpacity>
+
+
                             </View>
                         );
                     }}
+                />
+
+                <DisplayPageInfo
+                    info={this.props}
                 />
 
                 <Button
@@ -59,6 +69,8 @@ class EmployeesScreen extends React.Component {
                         this.props.signout();
                     }}
                 />
+
+
             </View>
         );
     };
@@ -66,8 +78,12 @@ class EmployeesScreen extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'yellow',
-        height: '100%'
+        backgroundColor: 'yellow'
+    },
+    employeesContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     employee: {
         borderRadius: 8,
@@ -75,8 +91,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '80%',
-        padding: 10
+        width: '88%',
+        padding: 10,
+        marginTop: 15
     },
     employeeText: {
         
@@ -96,9 +113,13 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         getEmployees: async () => {
+            dispatch(employeesLoadingAction(true));
             const response = await managerApi.get('/employees');
-            const employees = response.data;
-            dispatch(employeesGetAction(employees));
+            const { success, employees } = response.data;
+            if (success) {
+                dispatch(employeesGetAction(employees));
+            }
+            dispatch(employeesLoadingAction(false));
         },
         signout: async () => {
             await AsyncStorage.removeItem('token');

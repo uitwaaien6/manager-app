@@ -48,8 +48,11 @@ function mapDispatchToProps(dispatch) {
         addEmployee: async ({ name, phone, shift }) => {
             try {
                 dispatch(employeesLoadingAction(true));
-                await managerApi.post('/employees', { name, phone, shift });
-                dispatch(employeesLoadingAction(false));
+                const response = await managerApi.post('/employees', { name, phone, shift });
+                const { success } = response.data;
+                if (success) {
+                    dispatch(employeesLoadingAction(false));
+                }
             } catch (error) {
                 dispatch(employeesErrorAction('Something went wrong while creating an employee!'));
                 console.log(error.message);

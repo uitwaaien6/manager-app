@@ -56,7 +56,6 @@ function mapDispatchToProps(dispatch) {
                 const newPasswordConfirmEncryption = encryptPassword(newPasswordConfirm);
                 await managerApi.post('/api/auth/verification/password-reset/reset-password', { email: email.toLowerCase(), newPasswordEncryption, newPasswordConfirmEncryption });
                 dispatch(authLoadingAction(false));
-
             } catch (error) {
                 console.log(error.message);
                 dispatch(authErrorAction('Something went wrong in changing password'));

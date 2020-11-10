@@ -1,20 +1,22 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, TextInput } from 'react-native';
-import AuthForm from '../components/AuthForm';
 import DisplayPageInfo from '../components/DisplayPageInfo';
 import { connect } from 'react-redux';
 import managerApi from '../api/managerApi';
 import { navigate } from '../navigation/navigationRef';
 import { encryptPassword } from '../encryption/coefficientFairEncryption';
 import checkIfUserActive from '../check-user/checkIfUserActive';
-import { authSigninAction, authErrorAction, authLoadingAction } from '../actions/authActions';
-import ForgotPasswordForm from '../components/ForgotPasswordForm';
+import { authErrorAction, authLoadingAction } from '../actions/authActions';
 
 class PasswordResetCodeScreen extends React.Component {
 
     state = {
         email: this.props.navigation.getParam('email'),
         passwordResetCode: null
+    }
+
+    componentDidMount() {
+        checkIfUserActive();
     }
 
     render() {
@@ -66,7 +68,6 @@ function mapDispatchToProps(dispatch) {
         verifyPasswordResetCode: async ({ email, passwordResetCode }) => {
             try {
                 dispatch(authLoadingAction(true));
-                // encrypt passwordResetCode before sending to the server
                 const passwordResetCodeEncryption = encryptPassword(passwordResetCode);
                 const response = await managerApi.post('/api/auth/verification/password-reset/verify-code', { email, passwordResetCodeEncryption });
                 dispatch(authLoadingAction(false));

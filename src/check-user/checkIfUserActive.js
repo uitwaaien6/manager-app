@@ -10,8 +10,9 @@ export default async function checkIfUserActive() {
         if (token && jwtExpiration) {
             const response = await managerApi.get('/api/auth/verification/verify-account/check-user-status');
             const { status } = response.data;
-            console.log(status);
-            navigate('MainFlow');
+            if (status == 'active') {
+                navigate('MainFlow');
+            }
         } else {
             navigate('AuthFlow');
         }

@@ -53,8 +53,11 @@ function mapDispatchToProps(dispatch) {
                 dispatch(employeesLoadingAction(true));
                 await managerApi.post('/employees/edit', { name, phone, shift, employeeId });
                 const response = await managerApi.get('/employees');
-                const employees = response.data;
-                dispatch(employeesGetAction(employees));
+                const { success } = response.data;
+                if (success) {
+                    dispatch(employeesGetAction(employees));
+                }
+
             } catch (error) {
                 console.log(error.message);
                 dispatch(employeesErrorAction('Something went wrong while saving employee'));
@@ -64,9 +67,12 @@ function mapDispatchToProps(dispatch) {
         deleteEmployee: async (employeeId) => {
                 try {
                     dispatch(employeesLoadingAction(true));
-                    await managerApi.post('/employees/delete', { employeeId });
-                    dispatch(employeesLoadingAction(false));
-                    navigate('Employees');
+                    const response = await managerApi.post('/employees/delete', { employeeId });
+                    const { success } = response.data;
+                    if (success) {
+                        dispatch(employeesLoadingAction(false));
+                        navigate('Employees');
+                    }
                 } catch (error) {
                     console.log(error.message);
                     dispatch(employeesErrorAction('Something went wrong while saving employee'));

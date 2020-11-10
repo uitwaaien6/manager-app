@@ -17,9 +17,6 @@ class SignupScreen extends React.Component {
     render() {
         return (
             <View>
-
-                
-
                 <AuthForm
                     title="Signup"
                     onSubmit={this.props.signup}
@@ -67,7 +64,7 @@ function mapDispatchToProps(dispatch) {
                 await AsyncStorage.removeItem('jwtExpiration');
                 const { status } = response.data;
                 const verificationMsg = `We have sent a verification link to your email pleace check, it is ${status}` ;
-                dispatch(authSignupAction({ verificationMsg }));
+                dispatch(authSignupAction({ email, verificationMsg }));
             } catch (error) {
                 console.log(error);
                 dispatch(authErrorAction('Something went wrong in signup, please make sure your email addres and password is valid!'));
