@@ -7,7 +7,7 @@ class AuthForm extends React.Component {
         userName: '',
         email: '',
         password: '',
-        passwordConfirm: '',
+        passwordConfirm: ''
     };
 
     initializeForm() {
@@ -15,39 +15,54 @@ class AuthForm extends React.Component {
             case "Signup":
             case "Register":
                 return (
-                    <View>
-                        <TextInput
-                            placeholder="User Name"
-                            value={this.state.userName}
-                            
-                            onChangeText={(newText) => {
-                                this.setState({ userName: newText });
-                            }}
-                        />
+                    <View style={styles.container}>
 
-                        <TextInput
-                            placeholder="Email"
-                            value={this.state.email}
-                            onChangeText={(newText) => {
-                                this.setState({ email: newText });
-                            }}
-                        />
+                        <View>
+                            <Text>User Name: </Text>
+                            <TextInput
+                                placeholder="User Name"
+                                value={this.state.userName}
+                                
+                                onChangeText={(newText) => {
+                                    this.setState({ userName: newText });
+                                }}
+                            />
+                        </View>
 
-                        <TextInput
-                            placeholder="Password..."
-                            value={this.state.password}
-                            onChangeText={(newText) => {
-                                this.setState({ password: newText });
-                            }}
-                        />
 
-                        <TextInput
-                            placeholder="Confirm Password..."
-                            value={this.state.passwordConfirm}
-                            onChangeText={(newText) => {
-                                this.setState({ passwordConfirm: newText });
-                            }}
-                        />
+                        <View>
+                            <Text>Email: </Text>
+                            <TextInput
+                                placeholder="Email"
+                                value={this.state.email}
+                                onChangeText={(newText) => {
+                                    this.setState({ email: newText });
+                                }}
+                            />
+                        </View>
+
+                        <View>
+                            <Text>Password: </Text>
+                            <TextInput
+                                placeholder="Password..."
+                                value={this.state.password}
+                                onChangeText={(newText) => {
+                                    this.setState({ password: newText });
+                                }}
+                            />
+                        </View>
+
+
+                        <View>
+                            <Text>Confirm Password: </Text>
+                            <TextInput
+                                placeholder="Confirm Password..."
+                                value={this.state.passwordConfirm}
+                                onChangeText={(newText) => {
+                                    this.setState({ passwordConfirm: newText });
+                                }}
+                            />
+                        </View>
 
                         <Button
                             title={this.props.title}
@@ -61,22 +76,32 @@ class AuthForm extends React.Component {
             case 'Signin':
             case 'Login':
                 return (
-                    <View>
-                        <TextInput
-                            placeholder="Email"
-                            value={this.state.email}
-                            onChangeText={(newText) => {
-                                this.setState({ email: newText });
-                            }}
-                        />
+                    <View style={styles.container}>
 
-                        <TextInput
-                            placeholder="Password..."
-                            value={this.state.password}
-                            onChangeText={(newText) => {
-                                this.setState({ password: newText });
-                            }}
-                        />
+                        <View style={styles.section}>
+                            <Text style={styles.label}>Email: </Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Email"
+                                value={this.state.email}
+                                onChangeText={(newText) => {
+                                    this.setState({ email: newText });
+                                }}
+                            />
+                        </View>
+
+
+                        <View style={styles.section}>
+                            <Text style={styles.label}>Password: </Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Password..."
+                                value={this.state.password}
+                                onChangeText={(newText) => {
+                                    this.setState({ password: newText });
+                                }}
+                            />
+                        </View>
 
                         <Button
                             title={this.props.title}
@@ -85,6 +110,7 @@ class AuthForm extends React.Component {
                                 this.props.onSubmit({ email, password });
                             }}
                         />
+
                     </View>
                 );
             default:
@@ -98,10 +124,26 @@ class AuthForm extends React.Component {
     }
 
     render() {
-        return (
-            this.initializeForm()
-        );
+        return this.initializeForm();
     };
 };
+
+const styles = StyleSheet.create({
+    section: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    container: {
+
+    },
+    input: {
+        flex: 1,
+        fontSize: 20
+    },
+    label: {
+        fontSize: 22,
+        fontWeight: 'bold'
+    }
+})
 
 export default AuthForm;

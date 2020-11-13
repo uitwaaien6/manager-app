@@ -33,3 +33,10 @@ export function authLoadingAction(payload) {
         payload
     };
 };
+
+export function authMessageAction(payload) {
+    return {
+        type: authTypes.AUTH_MESSAGE,
+        payload
+    }
+}

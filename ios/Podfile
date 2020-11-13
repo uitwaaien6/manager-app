@@ -8,6 +8,10 @@ target 'manager' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'react-native-location', :path => '../node_modules/react-native-location'
+
+  pod 'react-native-geolocation', :path => '../node_modules/@react-native-community/geolocation'
+
   target 'managerTests' do
     inherit! :complete
     # Pods for testing

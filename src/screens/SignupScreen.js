@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, AsyncStorage, Linking } from 'react-native';
 import AuthForm from '../components/AuthForm';
-import { authSignupAction, authErrorAction, authLoadingAction } from '../actions/authActions';
+import { authSignupAction, authErrorAction, authLoadingAction, authTestAction } from '../actions/authActions';
 import { encryptPassword, decryptPassword } from '../encryption/coefficientFairEncryption';
 import managerApi from '../api/managerApi';
 import { connect } from 'react-redux';
@@ -19,7 +19,7 @@ class SignupScreen extends React.Component {
             <View>
                 <AuthForm
                     title="Signup"
-                    onSubmit={this.props.signup}
+                    onSubmit={this.props.signupAsAction}
                 />
 
                 <Button

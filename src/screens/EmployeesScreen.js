@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '88%',
         padding: 10,
-        marginTop: 15
+        margin: 10
     },
     employeeText: {
         

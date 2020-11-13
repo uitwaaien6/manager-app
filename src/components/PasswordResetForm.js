@@ -32,7 +32,9 @@ class PasswordResetForm extends React.Component {
                     title="Change Password"
                     onPress={() => {
                         const { email, newPassword, newPasswordConfirm } = this.state;
-                        this.props.onChangePassword({ email, newPassword, newPasswordConfirm });
+                        const passwordResetCode = this.props.passwordResetCode;
+                        console.log(passwordResetCode);
+                        this.props.onChangePassword({ email, newPassword, newPasswordConfirm, passwordResetCode });
                     }}
                 />
             </View>

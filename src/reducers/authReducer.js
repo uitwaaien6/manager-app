@@ -8,7 +8,8 @@ const initialState = {
     },
     loading: false,
     error: null,
-    msg: null
+    msg: null,
+    test: 0
 };
 
 function authReducer(state = initialState, action) {
@@ -23,6 +24,8 @@ function authReducer(state = initialState, action) {
             return { ...state, error: action.payload, msg: null, loading: null };
         case authTypes.AUTH_LOADING:
             return { ...state, loading: action.payload };
+        case authTypes.AUTH_MESSAGE:
+            return { ...state, msg: action.payload };
         default:
             return state;
     };

@@ -73,7 +73,7 @@ function mapDispatchToProps(dispatch) {
                 dispatch(authLoadingAction(false));
                 const { success } = response.data;
                 if (success) {
-                    navigate('PasswordReset', { email });
+                    navigate('PasswordReset', { email, passwordResetCode });
                 }
             } catch (error) {
                 console.log(error.message);

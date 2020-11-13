@@ -7,14 +7,15 @@ import managerApi from '../api/managerApi';
 import { navigate } from '../navigation/navigationRef';
 import { encryptPassword } from '../encryption/coefficientFairEncryption';
 import checkIfUserActive from '../check-user/checkIfUserActive';
-import { authSigninAction, authErrorAction, authLoadingAction } from '../actions/authActions';
+import { authSigninAction, authErrorAction, authLoadingAction, authMessageAction } from '../actions/authActions';
 import ForgotPasswordForm from '../components/ForgotPasswordForm';
 import PasswordResetForm from '../components/PasswordResetForm';
 
 class PasswordResetScreen extends React.Component {
 
     state = {
-        email: this.props.navigation.getParam('email')
+        email: this.props.navigation.getParam('email'),
+        passwordResetCode: this.props.navigation.getParam('passwordResetCode')
     }
 
     render() {
@@ -22,6 +23,7 @@ class PasswordResetScreen extends React.Component {
             <View>
                 <PasswordResetForm
                     email={this.state.email}
+                    passwordResetCode={this.state.passwordResetCode}
                     onChangePassword={this.props.changePassword}
                 />
 
@@ -49,13 +51,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        changePassword: async ({ email, newPassword, newPasswordConfirm }) => {
+        changePassword: async ({ email, newPassword, newPasswordConfirm, passwordResetCode }) => {
             try {
                 dispatch(authLoadingAction(true));
                 const newPasswordEncryption = encryptPassword(newPassword);
                 const newPasswordConfirmEncryption = encryptPassword(newPasswordConfirm);
-                await managerApi.post('/api/auth/verification/password-reset/reset-password', { email: email.toLowerCase(), newPasswordEncryption, newPasswordConfirmEncryption });
+                await managerApi.post('/api/auth/verification/password-reset/reset-password', { email: email.toLowerCase(), newPasswordEncryption, newPasswordConfirmEncryption, passwordResetCode });
                 dispatch(authLoadingAction(false));
+                dispatch(authMessageAction('Password Changed Successfully'));
+                navigate('Signin');
             } catch (error) {
                 console.log(error.message);
                 dispatch(authErrorAction('Something went wrong in changing password'));

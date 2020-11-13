@@ -10,14 +10,26 @@ import PasswordResetScreen from './src/screens/PasswordResetScreen';
 import EmployeesScreen from './src/screens/EmployeesScreen';
 import CreateEmployeeScreen from './src/screens/CreateEmployeeScreen';
 import EmployeeDetailScreen from './src/screens/EmployeeDetailScreen';
+import TestMapScreen from './src/screens/TestMapScreen';
 import { setNavigator } from './src/navigation/navigationRef';
 import initializeStore from './src/stores/store';
+
+const linking = {
+  prefixes: ['https://a0e5f1114ab9.ngrok.io'],
+  config: {
+    Home: 'Signup',
+    Details: {
+      path: 'Signup'
+    }
+  }
+};
 
 const navigator = createSwitchNavigator({
   AuthFlow: createStackNavigator({ 
     Signup: { 
-      screen: SignupScreen 
-    }, 
+      screen: SignupScreen,
+      linking
+    },
     Signin: { 
       screen: SigninScreen 
     },
@@ -26,7 +38,12 @@ const navigator = createSwitchNavigator({
     },
     PasswordReset: {
       screen: PasswordResetScreen
+    },
+    TestMap: {
+      screen: TestMapScreen
     }
+  }, {
+    initialRouteName: "Signin"
   }),
   MainFlow: createBottomTabNavigator({ 
     EmployeesFlow: createStackNavigator({ 

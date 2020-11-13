@@ -18,6 +18,7 @@ class SigninScreen extends React.Component {
 
     componentDidMount() {
         checkIfUserActive();
+
     }
 
     render() {
@@ -38,6 +39,13 @@ class SigninScreen extends React.Component {
                 <ForgotPasswordForm
                     showForm={this.state.showForm}
                     onPasswordResetCodeSend={this.props.sendPasswordResetCode}
+                />
+
+                <Button
+                    title="Don't have an account, Create one?"
+                    onPress={() => {
+                        navigate('Signup');
+                    }}
                 />
 
                 <DisplayPageInfo
@@ -63,7 +71,7 @@ function mapStateToProps(state) {
     };
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
     return {
         signin: async ({ email, password }) => {
             try {
@@ -78,12 +86,12 @@ function mapDispatchToProps(dispatch) {
                 navigate('MainFlow');
             } catch (error) {
                 let message = '';
-                if (error.message === 'Request failed with status code 401') {  message = 'Please Verify Your email'; } 
+                if (error.message === 'Request failed with status code 401' || error.message.includes('401')) {  message = 'Please Verify Your email'; } 
                 else { message = 'Something went wrong in Signin!'; }
                 dispatch(authErrorAction(message));
             }
         },
-        resendLink: async () => {
+        resendEmailVerificationLink: async () => {
             try {
                 dispatch(authLoadingAction(true));
                 await managerApi.get('/api/auth/verification/verify-account/resend-link');
@@ -106,6 +114,7 @@ function mapDispatchToProps(dispatch) {
                 dispatch(authErrorAction('Something occured while sending password reset link'));
             }
         }
+        
     }
 }
 

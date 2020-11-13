@@ -27,7 +27,7 @@ class DisplayPageInfo extends React.Component {
                         this.props.info.error === 'Please Verify Your email'
                         ? <Button
                             title="Resend verification Link"
-                            onPress={this.props.info.resendLink}
+                            onPress={this.props.info.resendEmailVerificationLink}
                         /> 
                         : null
                     }
