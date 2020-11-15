@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Button, AsyncStorage, ActivityIndicator } from 
 import { navigate } from '../navigation/navigationRef';
 
 const instance = axios.create({
-    baseURL: 'https://a0e5f1114ab9.ngrok.io'
+    baseURL: 'https://939b52fd0d43.ngrok.io'
 });
 
 instance.interceptors.request.use(
@@ -29,7 +29,9 @@ instance.interceptors.request.use(
         }
     },
     async (err) => {
-        return Promise.reject(err);
+        if (err) {
+            return Promise.reject(err);
+        }
     }
 )
 

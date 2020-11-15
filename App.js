@@ -14,21 +14,10 @@ import TestMapScreen from './src/screens/TestMapScreen';
 import { setNavigator } from './src/navigation/navigationRef';
 import initializeStore from './src/stores/store';
 
-const linking = {
-  prefixes: ['https://a0e5f1114ab9.ngrok.io'],
-  config: {
-    Home: 'Signup',
-    Details: {
-      path: 'Signup'
-    }
-  }
-};
-
 const navigator = createSwitchNavigator({
   AuthFlow: createStackNavigator({ 
     Signup: { 
-      screen: SignupScreen,
-      linking
+      screen: SignupScreen
     },
     Signin: { 
       screen: SigninScreen 
@@ -43,7 +32,7 @@ const navigator = createSwitchNavigator({
       screen: TestMapScreen
     }
   }, {
-    initialRouteName: "Signin"
+    initialRouteName: "TestMap"
   }),
   MainFlow: createBottomTabNavigator({ 
     EmployeesFlow: createStackNavigator({ 
